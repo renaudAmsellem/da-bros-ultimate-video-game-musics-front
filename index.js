@@ -1,5 +1,3 @@
-fetch("http://localhost:3000/music", {mode: 'no-cors'}).then(sound => console.log(sound))
-
 var sound;
 
 var play = () => {
