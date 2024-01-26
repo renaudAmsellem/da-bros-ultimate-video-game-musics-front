@@ -6,6 +6,7 @@ import ProgressBar from './components/ProgressBar.vue';
 import Player from './components/Player.vue';
 import KeyboardEventListener from './components/KeyboardEventListener.vue';
 import {getShuffledSongs} from './helpers/getShuffledSongs'
+import {gamesMetadata} from './gamesMetadata'
 
 let audio;
 const song = ref({
@@ -55,6 +56,11 @@ const pause = () => {
   isPaused.value = true
 }
 
+const togglePlayPause = () => {
+  if (isPaused.value === true) return play()
+  return pause()
+}
+
 const previous = () => {
   pause()
   playPreviousSong()
@@ -75,12 +81,29 @@ const seek = (time) => {
 
 watch(indexSong, () => {
   if (audio) audio.pause()
-  const songToPlay = songs[indexSong.value] 
+  const songToPlay = songs[indexSong.value]
+  const gameName = songToPlay.substring(0, songToPlay.indexOf(' -'))
+  const songMetadata = gamesMetadata[gameName]
   song.value.name = songToPlay
   audio = new Audio(songToPlay + '.mp3')
   audio.addEventListener("ended", next);
   audio.addEventListener("timeupdate", () =>  song.value.progress = audio.currentTime);
   audio.addEventListener("loadedmetadata", () =>  song.value.duration = audio.duration);
+  // audio.addEventListener("audioprocess", () =>  console.log('audioprocess'));
+  // audio.addEventListener("canplay", () =>  console.log('canplay'));
+  // audio.addEventListener("canplaythrough", () =>  console.log('canplaythrough'));
+  // audio.addEventListener("complete", () =>  console.log('complete'));
+  // audio.addEventListener("loadeddata", () =>  console.log('loadeddata'));
+  // audio.addEventListener("loadedmetadata", () =>  console.log('loadedmetadata'));
+  // audio.addEventListener("loadstart", () =>  console.log('loadstart'));
+  // audio.addEventListener("pause", () =>  console.log('pause'));
+  // audio.addEventListener("play", () =>  console.log('play'));
+  // audio.addEventListener("playing", () =>  console.log('playing'));
+  // audio.addEventListener("seeked", () =>  console.log('seeked'));
+  // audio.addEventListener("seeking", () =>  console.log('seeking'));
+  // audio.addEventListener("stalled", () =>  console.log('stalled'));
+  // audio.addEventListener("suspend", () =>  console.log('suspend'));
+  // audio.addEventListener("waiting", () =>  console.log('waiting'));
   audio.play()
 }, {immediate: true})
 </script>
@@ -99,7 +122,7 @@ watch(indexSong, () => {
 
       <Stars class="stars" :songName="song.name" />
 
-      <KeyboardEventListener :songName="song.name" @play="play" @pause="pause" @previous="previous" @next="next" />
+      <KeyboardEventListener :songName="song.name" @play="play" @pause="pause" @previous="previous" @next="next" @togglePlayPause="togglePlayPause" />
     </div>
   </div>
 </template>

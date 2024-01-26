@@ -2,7 +2,7 @@
 import {watch} from 'vue'
 
 const props = defineProps(['songName'])
-const emit = defineEmits(['play', 'pause', 'previous', 'next'])
+const emit = defineEmits(['play', 'pause', 'previous', 'next', 'togglePlayPause'])
 
 watch(() => props.songName, () => {
     if ('mediaSession' in navigator) {
@@ -19,4 +19,16 @@ watch(() => props.songName, () => {
         navigator.mediaSession.setActionHandler('nexttrack', () => emit('next'));
     }
 }, {immediate: true})
+
+document.body.onkeydown = function(e) {
+  if (e.key == " " ||
+      e.code == "Space" ||      
+      e.keyCode == 32
+  ) {
+    e.preventDefault()
+    emit("togglePlayPause")
+  }
+}
 </script>
+
+<template></template>
