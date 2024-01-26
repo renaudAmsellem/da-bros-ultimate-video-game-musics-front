@@ -1,4 +1,6 @@
-export const shuffle = (array) => {
+import musicNames from '../assets/musicNames?raw'
+
+const shuffle = (array) => {
     let currentIndex = array.length,  randomIndex;
   
     // While there remain elements to shuffle.
@@ -14,4 +16,5 @@ export const shuffle = (array) => {
     }
   
     return array;
-  }
+}
+export const getShuffledSongs = () => shuffle(musicNames.split('.mp3,'))

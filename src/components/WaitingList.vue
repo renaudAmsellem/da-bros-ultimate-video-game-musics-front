@@ -1,7 +1,6 @@
 <script setup>
 const props = defineProps(['waitingList'])
 const emit = defineEmits(['selectSong'])
-
 </script>
 
 

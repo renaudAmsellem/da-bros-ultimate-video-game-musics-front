@@ -1,12 +1,11 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
-import musicNames from './assets/musicNames?raw'
 import Stars from './components/Stars.vue';
 import WaitingList from './components/WaitingList.vue';
 import ProgressBar from './components/ProgressBar.vue';
 import Player from './components/Player.vue';
-import {shuffle} from './helpers/shuffle'
 import KeyboardEventListener from './components/KeyboardEventListener.vue';
+import {getShuffledSongs} from './helpers/getShuffledSongs'
 
 let audio;
 const song = ref({
@@ -16,8 +15,7 @@ const song = ref({
 })
 const isPaused = ref(true);
 
-const orderedSongs = musicNames.split('.mp3,')
-const songs = shuffle(orderedSongs)
+const songs = getShuffledSongs()
 const indexSong = ref(0)
 
 const waitingList = computed(() => {
@@ -93,15 +91,15 @@ watch(indexSong, () => {
       <img src="./assets/mario_listening_music.png" alt="Album cover" />
     </div>
     <div class="wrapper">
-      <ProgressBar :progress="song.progress" :duration="song.duration" @seek="seek"/>
+      <ProgressBar :progress="song.progress" :duration="song.duration" @seek="seek" />
 
-      <WaitingList :waiting-list="waitingList" @selectSong="selectSong"/>
+      <WaitingList :waiting-list="waitingList" @selectSong="selectSong" />
 
       <Player :songName="song.name" :isPaused="isPaused" @play="play" @pause="pause" @next="next" @previous="previous" />
 
       <Stars class="stars" :songName="song.name" />
 
-      <KeyboardEventListener />
+      <KeyboardEventListener :songName="song.name" @play="play" @pause="pause" @previous="previous" @next="next" />
     </div>
   </div>
 </template>
