@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 
-const props = defineProps(['fileName'])
+const props = defineProps(['songName'])
 const currentNotes = JSON.parse(localStorage.getItem('notes')) ?? {}
 
 const fullStarCount = ref(0)
@@ -15,11 +15,11 @@ const setCurrentNote = (index) => currentNote.value = index
 
 watch(currentNote, (newValue) => {
     if (currentNote === 0) return
-    currentNotes[props.fileName] = newValue
+    currentNotes[props.songName] = newValue
     localStorage.setItem('notes', JSON.stringify(currentNotes))
 })
 
-watch(() => props.fileName, (newValue) => {
+watch(() => props.songName, (newValue) => {
     fullStarCount.value = currentNotes[newValue] || 0
 },  { immediate: true } )
 </script>
@@ -37,6 +37,7 @@ watch(() => props.fileName, (newValue) => {
 .note {
     display: flex;
     margin: auto;
+    justify-content: center;
     &:hover {
         cursor: pointer;
     }

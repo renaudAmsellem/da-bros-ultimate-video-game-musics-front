@@ -1,52 +1,90 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import musicNames from './assets/musicNames?raw'
 import Stars from './components/Stars.vue';
+import WaitingList from './components/WaitingList.vue';
 import ProgressBar from './components/ProgressBar.vue';
+import Player from './components/Player.vue';
+import {shuffle} from './helpers/shuffle'
+import KeyboardEventListener from './components/KeyboardEventListener.vue';
 
 let audio;
-const progress = ref(0)
-const duration = ref(0)
+const song = ref({
+  name: '',
+  progress: 0,
+  duration: 0
+})
 const isPaused = ref(true);
-const fileName = ref('')
 
-const selectFileToPlay = () => {
-  const files = musicNames.split('.mp3,')
-  let max = files.length - 1;
-  let min = 0;
+const orderedSongs = musicNames.split('.mp3,')
+const songs = shuffle(orderedSongs)
+const indexSong = ref(0)
+
+const waitingList = computed(() => {
+  const list = []
+  for (let i = 1 ; i <= 5 ; i ++) {
+    list.push(songs[indexSong.value + i])
+  }
+  return list
+})
+
+const playPreviousSong = () => {
+  if (indexSong.value === 0) return
+
+  indexSong.value = indexSong.value - 1
+}
+
+const playNextSong = () => {
+  if (indexSong.value === songs.length) {
+    indexSong.value = 0;
+    return
+  }
   
-  let index = Math.round(Math.random() * (max - min) + min);
-  let file = files[index];
-  fileName.value = file
-  return file
+  indexSong.value = indexSong.value + 1
 }
 
-const selectNewFile = () => {
-  const fileToPlay = selectFileToPlay()
-  audio = new Audio(fileToPlay + '.mp3')
-  audio.addEventListener("ended", next);
-  audio.addEventListener("timeupdate", () =>  progress.value = audio.currentTime);
-  audio.addEventListener("loadedmetadata", () =>  duration.value = audio.duration);
+const selectSong = (index) => {
+  indexSong.value = indexSong.value + index + 1
 }
 
-const play = async() => {
+const play = () => {
   audio.play()
   isPaused.value = false
 }
 
-const pause = async() => {
+const pause = () => {
   audio.pause()
   isPaused.value = true
 }
 
-const next = async() => {
+const previous = () => {
   pause()
-  selectNewFile()
+  playPreviousSong()
   play()
   isPaused.value = false
 }
 
-selectNewFile()
+const next = () => {
+  pause()
+  playNextSong()
+  play()
+  isPaused.value = false
+}
+
+const seek = (time) => {
+  audio.currentTime = time
+}
+
+watch(indexSong, () => {
+  if (audio) audio.pause()
+  const songToPlay = songs[indexSong.value] 
+  song.value.name = songToPlay
+  audio = new Audio(songToPlay + '.mp3')
+  audio.addEventListener("ended", next);
+  audio.addEventListener("timeupdate", () =>  song.value.progress = audio.currentTime);
+  audio.addEventListener("loadedmetadata", () =>  song.value.duration = audio.duration);
+  audio.play()
+}, {immediate: true})
 </script>
 
 <template>
@@ -54,55 +92,57 @@ selectNewFile()
     <div class="mario_image">
       <img src="./assets/mario_listening_music.png" alt="Album cover" />
     </div>
-    <div class="body__info">
-      <div class="info__song">{{ fileName }}</div>
+    <div class="wrapper">
+      <ProgressBar :progress="song.progress" :duration="song.duration" @seek="seek"/>
+
+      <WaitingList :waiting-list="waitingList" @selectSong="selectSong"/>
+
+      <Player :songName="song.name" :isPaused="isPaused" @play="play" @pause="pause" @next="next" @previous="previous" />
+
+      <Stars class="stars" :songName="song.name" />
+
+      <KeyboardEventListener />
     </div>
-
-    <div>
-      <ProgressBar :progress="progress" :duration="duration"/>
-    </div>
-
-    <div class="body__buttons">
-      <ul class="list list--buttons">
-        <li><a href="#" class="list__link"><i class="fa fa-step-backward"></i></a></li>
-
-        <li v-show="isPaused" @click="play"><img src="./assets/playIcon.png" /></li>
-        <li v-show="!isPaused" @click="pause"><img src="./assets/pauseIcon.png" /></li>
-
-        <li @click="next"><img src="./assets/nextIcon.png" /></li>
-      </ul>
-    </div>
-    <Stars class="stars" :fileName="fileName" />
   </div>
 </template>
 
 <style lang="scss">
 html {
   font-size: 16px;
+  height: 100%
 }
 
 body {
   font-family: 'Roboto', Arial, Verdana, sans-serif;
   background: #e4f2fb;
+  height: 100%;
 }
 
 .player__container {
-  height: calc(100vh - 64px);
-  max-height: calc(100vh - 64px);
-  width: 720px;
   margin-right: auto;
   margin-left: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  text-align: center;
+  align-items: center;
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .19), 0 6px 6px -10px rgba(0, 0, 0, .23);;
+
+  @media screen and (min-width: 780px) {
+    width: 780px;
+  }
+}
+
+.wrapper {
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .mario_image {
   max-height: 100%;
-  height: 60%;
+  height: 200px;
 }
 
 img {
@@ -117,7 +157,6 @@ img {
 }
 
 .body__info {
-  padding-top: 1rem;
   padding-bottom: 1em;
 }
 
@@ -126,20 +165,7 @@ img {
   color: #d30320;
 }
 
-.list--buttons {
-  align-items: center;
-  justify-content: center;
-}
-
-.list--buttons li:nth-of-type(n+1) {
-  margin-left: 1.5rem;
-}
-
 li {
     cursor: pointer;
-}
-
-.stars {
-  padding-bottom: 1em;
 }
 </style>

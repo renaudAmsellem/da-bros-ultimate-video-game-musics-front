@@ -2,12 +2,20 @@
 import { watch } from 'vue';
 
 const props = defineProps(['progress', 'duration'])
+const emit = defineEmits(['seek'])
 
 watch(() => props.progress, () => {
-    const progressbar = document.getElementById('progress-bar');
-    progressbar.value = (props.progress / props.duration);
-    console.log(progressbar.value)
+    const progressBar = document.getElementById('progress-bar');
+    progressBar.value = (props.progress / props.duration);
+    progressBar.addEventListener("click", seek);
 })
+
+const seek = (event) => {
+    const progressBar = document.getElementById('progress-bar');
+    const progressBarPosition = progressBar.getBoundingClientRect();
+    const percent = (event.clientX - progressBarPosition.left) / (progressBarPosition.right - progressBarPosition.left);
+    emit('seek', percent * props.duration)
+}
 </script>
 
 <template>
@@ -18,6 +26,7 @@ watch(() => props.progress, () => {
 progress {
     width: 90%;
     margin-bottom: 1em;
+    cursor: pointer;
 }
 
 progress[value] {
