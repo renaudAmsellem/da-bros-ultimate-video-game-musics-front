@@ -13,7 +13,10 @@ const Platforms = {
     DS: 'DS',
     '3DS': "3 DS",
     XBOX360: 'XBOX 360',
-    PC: 'PC'
+    PLAYSTATION: 'Playstation',
+    PLAYSTATION4: 'Playstation 4',
+    PC: 'PC',
+    MOBILE: 'Mobile'
 }
 
 export const gamesMetadata = {
@@ -37,7 +40,7 @@ export const gamesMetadata = {
         date: '2003',
         platform: Platforms.GAMECUBE,
     },
-    'Banjo-Kazooie': {
+    'Banjo Kazooie': {
         date: '1998',
         platform: Platforms['NINTENDO64'],
     },
@@ -241,7 +244,7 @@ export const gamesMetadata = {
         date: '1992',
         platform: Platforms.MEGADRIVE
     },
-    'The Legend of the Mystical Ninja': {
+    'Legend of the Mystical Ninja': {
         date: '1991',
         platform: Platforms.SUPER_NES
     },
@@ -640,5 +643,145 @@ export const gamesMetadata = {
     'Super Mario World': {
         date: '1991',
         platform: Platforms.SUPER_NES
+    },
+    'Super Metroid': {
+        date: '1994',
+        platform: Platforms.SUPER_NES
+    },
+    'Super Monkey Ball': {
+        date: '2008',
+        platform: Platforms.MOBILE
+    },
+    'Super Paper Mario': {
+        date: '2007',
+        platform: Platforms.WII
+    },
+    'Super Smash Bros Brawl': {
+        date: '2008',
+        platform: Platforms.WII
+    },
+    'Super Smash Bros Melee': {
+        date: '2001',
+        platform: Platforms.GAMECUBE
+    },
+    'Super Smash Bros Ultimate': {
+        date: '2018',
+        platform: Platforms.SWITCH
+    },
+    'Street Fighter II Turbo': {
+        date: '1993',
+        platform: Platforms.SUPER_NES
+    },
+    'Tales of Phantasia': {
+        date: '1998',
+        platform: Platforms.PLAYSTATION
+    },
+    'Tales of Phantasia': {
+        date: '2003',
+        platform: Platforms.GAMECUBE
+    },
+    'Teenage Mutant Ninja Turtles': {
+        date: '1989',
+        platform: Platforms.NES
+    },
+    'Terranigma': {
+        date: '1995',
+        platform: Platforms.SUPER_NES
+    },
+    'The Messenger': {
+        date: '2018',
+        platform: Platforms.SWITCH
+    },
+    'The Witcher 3 Wild Hunt': {
+        date: '2015',
+        platform: Platforms.PLAYSTATION4
+    },
+    'Tomodachi Life': {
+        date: '2013',
+        platform: Platforms['3DS']
+    },
+    'Top Gear': {
+        date: '1992',
+        platform: Platforms.NES
+    },
+    'Undertale': {
+        date: '2015',
+        platform: Platforms.PC
+    },
+    'VVVVVV': {
+        date: '2010',
+        platform: Platforms.PC
+    },
+    'Wii Sports': {
+        date: '2006',
+        platform: Platforms.WII
+    },
+    'Wii Sports Resort': {
+        date: '2009',
+        platform: Platforms.WII
+    },
+    'Wizards & Warriors': {
+        date: '1987',
+        platform: Platforms.NES
+    },
+    'Xenoblade Chronicles': {
+        date: '2010',
+        platform: Platforms.WII
+    },
+    'Xenoblade Chronicles 2': {
+        date: '2017',
+        platform: Platforms.SWITCH
+    },
+    'Xenoblade Chronicles 2 Torna The Golden Country': {
+        date: '2018',
+        platform: Platforms.SWITCH
+    },
+    'Yoshi\'s Island': {
+        date: '1995',
+        platform: Platforms.SUPER_NES
+    },
+    'Zelda A Link Between Worlds': {
+        date: '2013',
+        platform: Platforms['3DS']
+    },
+    'Zelda A Link to the Past': {
+        date: '1991',
+        platform: Platforms.SUPER_NES
+    },
+    'Zelda Breath of the Wild': {
+        date: '2017',
+        platform: Platforms.SWITCH
+    },
+    'Zelda Link\'s Awakening': {
+        date: '1993',
+        platform: Platforms.GAMEBOY
+    },
+    'Zelda Majora\'s Mask': {
+        date: '2000',
+        platform: Platforms.NINTENDO64
+    },
+    'Zelda Ocarina of Time': {
+        date: '1998',
+        platform: Platforms.NINTENDO64
+    },
+    'Zelda Skyward Sword': {
+        date: '2011',
+        platform: Platforms.WII
+    },
+    'Zelda Spirit Tracks': {
+        date: '2009',
+        platform: Platforms.DS
+    },
+    'Zelda The Wind Waker': {
+        date: '2002',
+        platform: Platforms.GAMECUBE
+    },
+    'Zelda Tri Force Heroes': {
+        date: '2015',
+        platform: Platforms['3DS']
+    },
+    'Zelda Twilight Princess': {
+        date: '2006',
+        platform: Platforms.WII
     },
 }
