@@ -8,6 +8,7 @@ const Platforms = {
     WIIU: 'Wii U',
     SWITCH: "Switch",
     GAMEBOY: 'GameBoy ',
+    GBC: 'GameBoy Color',
     GBA: 'GameBoy Advance',
     DS: 'DS',
     '3DS': "3 DS",
@@ -339,5 +340,133 @@ export const gamesMetadata = {
     'Metroid Prime': {
         date: '2002',
         platform: Platforms.GAMECUBE
+    },
+    'Metroid Samus Returns': {
+        date: '2017',
+        platform: Platforms['3DS']
+    },
+    'Mike Tyson\'s Punch-Out!!': {
+        date: '1987',
+        platform: Platforms.NES
+    },
+    'Monster Hunter Generations': {
+        date: '2015',
+        platform: Platforms['3DS']
+    },
+    'Mother': {
+        date: '2003',
+        platform: Platforms.GBA
+    },
+    'Mother 3': {
+        date: '2006',
+        platform: Platforms.GBA
+    },
+    'New Super Mario Bros 2': {
+        date: '2012',
+        platform: Platforms['3DS']
+    },
+    'New Super Mario Bros U': {
+        date: '2012',
+        platform: Platforms.WIIU
+    },
+    'New Super Mario Bros Wii': {
+        date: '2009',
+        platform: Platforms.WII
+    },
+    'Nintendo Land': {
+        date: '2012',
+        platform: Platforms.WIIU
+    },
+    'Octopath Traveler': {
+        date: '2018',
+        platform: Platforms.PC
+    },
+    'Outer Wilds': {
+        date: '2019',
+        platform: Platforms.PC
+    },
+    'Paper Mario Color Splash': {
+        date: '2016',
+        platform: Platforms.WIIU
+    },
+    'Paper Mario The Thousand-Year Door': {
+        date: '2004',
+        platform: Platforms.GAMECUBE
+    },
+    'Phoenix Wright Ace Attorney': {
+        date: '2009',
+        platform: Platforms.WII
+    },
+    'Phoenix Wright Spirit of Justice': {
+        date: '2016',
+        platform: Platforms['3DS']
+    },
+    'Pilotwings Resort': {
+        date: '2011',
+        platform: Platforms['3DS']
+    },
+    'Pokémon Black & White': {
+        date: '2010',
+        platform: Platforms.DS
+    },
+    'Pokémon Black & White 2': {
+        date: '2012',
+        platform: Platforms.DS
+    },
+    'Pokémon Colosseum': {
+        date: '2003',
+        platform: Platforms.GAMECUBE
+    },
+    'Pokémon Diamond & Pearl': {
+        date: '2000',
+        platform: Platforms.GBC
+    },
+    'Pokémon FireRed & LeafGreen': {
+        date: '2004',
+        platform: Platforms.GBA
+    },
+    'Pokémon HeartGold & SoulSilver': {
+        date: '2009',
+        platform: Platforms.DS
+    },
+    'Pokémon Mystery Dungeon Explorers of Sky': {
+        date: '2009',
+        platform: Platforms.DS
+    },
+    'Pokémon Omega Ruby & Alpha Sapphire': {
+        date: '2014',
+        platform: Platforms['3DS']
+    },
+    'Pokémon Ruby & Sapphire': {
+        date: '2002',
+        platform: Platforms.GBA
+    },
+    'Pokémon Sun & Moon': {
+        date: '2016',
+        platform: Platforms['3DS']
+    },
+    'Pokémon Sun & Moon': {
+        date: '2016',
+        platform: Platforms['3DS']
+    },
+    'Pokémon Ultra Sun & Ultra Moon': {
+        date: '2017',
+        platform: Platforms['3DS']
+    },
+    'Pokémon X & Y': {
+        date: '2013',
+        platform: Platforms['3DS']
+    },
+    'Professor Layton and the Diabolical Box': {
+        date: '2007',
+        platform: Platforms.DS
+    },
+    'Professor Layton and the Azran Legacy': {
+        date: '2013',
+        platform: Platforms['3DS']
+    },
+    'Professor Layton and the Curious Village': {
+        date: '2007',
+        platform: Platforms.DS
     },
 }
