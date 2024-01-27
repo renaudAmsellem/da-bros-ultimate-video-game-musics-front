@@ -612,7 +612,7 @@ export const gamesMetadata = {
         date: '1996',
         platform: Platforms.NINTENDO64
     },
-    'Super Mario All-Stars': {
+    'Super Mario All Stars': {
         date: '1993',
         platform: Platforms.SUPER_NES
     },
