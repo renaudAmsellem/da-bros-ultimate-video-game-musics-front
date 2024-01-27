@@ -392,7 +392,7 @@ export const gamesMetadata = {
         date: '2016',
         platform: Platforms.WIIU
     },
-    'Paper Mario The Thousand-Year Door': {
+    'Paper Mario The Thousand Year Door': {
         date: '2004',
         platform: Platforms.GAMECUBE
     },
