@@ -469,4 +469,176 @@ export const gamesMetadata = {
         date: '2007',
         platform: Platforms.DS
     },
+    'Professor Layton and the Last Specter': {
+        date: '2009',
+        platform: Platforms.DS
+    },
+    'Professor Layton and the Miracle Mask': {
+        date: '2011',
+        platform: Platforms['3DS']
+    },
+    'Professor Layton and the Unwound Future': {
+        date: '2008',
+        platform: Platforms.DS
+    },
+    'Professor Layton vs Phoenix Wright': {
+        date: '2012',
+        platform: Platforms['3DS']
+    },
+    'Punch-Out!!': {
+        date: '2009',
+        platform: Platforms.WII
+    },
+    'Rayman Origins': {
+        date: '2011',
+        platform: Platforms['3DS']
+    },
+    'Rock N Roll Racing': {
+        date: '1993',
+        platform: Platforms.SUPER_NES
+    },
+    'Rogue Legacy': {
+        date: '2013',
+        platform: Platforms.PC
+    },
+    'Secret of Mana': {
+        date: '1993',
+        platform: Platforms.SUPER_NES
+    },
+    'Seeeeeeeegaaaaaaaaaaaaaa': {
+        date: '',
+        platform: ''
+    },
+    'Seiken Densetsu 3': {
+        date: '1995',
+        platform: Platforms.SUPER_NES
+    },
+    'Shovel Knight': {
+        date: '2014',
+        platform: Platforms.PC
+    },
+    'Silver Surfer': {
+        date: '1990',
+        platform: Platforms.NES
+    },
+    'Soleil': {
+        date: '1994',
+        platform: Platforms.MEGADRIVE
+    },
+    'Sonic & Knuckles': {
+        date: '1994',
+        platform: Platforms.MEGADRIVE
+    },
+    'Sonic Colors': {
+        date: '2010',
+        platform: Platforms.WII
+    },
+    'Sonic Generations': {
+        date: '2011',
+        platform: Platforms.PC
+    },
+    'Sonic Lost World': {
+        date: '2013',
+        platform: Platforms['3DS']
+    },
+    'Sonic the Hedgehog 2': {
+        date: '1992',
+        platform: Platforms.MEGADRIVE
+    },
+    'Sonic the Hedgehog 3': {
+        date: '1994',
+        platform: Platforms.MEGADRIVE
+    },
+    'Sonic Unleashed': {
+        date: '2008',
+        platform: Platforms.WII
+    },
+    'Sparkster': {
+        date: '1994',
+        platform: Platforms.SUPER_NES
+    },
+    'Spelunky': {
+        date: '2012',
+        platform: Platforms.PC
+    },
+    'Star Fox': {
+        date: '1993',
+        platform: Platforms.SUPER_NES
+    },
+    'Star Fox 64': {
+        date: '1997',
+        platform: Platforms.NINTENDO64
+    },
+    'Stardew Valley': {
+        date: '2016',
+        platform: Platforms.PC
+    },
+    'StarTropics': {
+        date: '1990',
+        platform: Platforms.NES
+    },
+    'Streets of Rage': {
+        date: '1993',
+        platform: Platforms.MEGADRIVE
+    },
+    'Super Castlevania IV': {
+        date: '1991',
+        platform: Platforms.SUPER_NES
+    },
+    'Super Ghouls n Ghosts': {
+        date: '1991',
+        platform: Platforms.SUPER_NES
+    },
+    'Super Hang-On': {
+        date: '1987',
+        platform: Platforms.MEGADRIVE
+    },
+    'Super Kirby Clash': {
+        date: '2019',
+        platform: Platforms.SWITCH
+    },
+    'Super Mario 3D Land': {
+        date: '2011',
+        platform: Platforms['3DS']
+    },
+    'Super Mario 3D World': {
+        date: '2013',
+        platform: Platforms.WIIU
+    },
+    'Super Mario 64': {
+        date: '1996',
+        platform: Platforms.NINTENDO64
+    },
+    'Super Mario All-Stars': {
+        date: '1993',
+        platform: Platforms.SUPER_NES
+    },
+    'Super Mario Galaxy': {
+        date: '2007',
+        platform: Platforms.WII
+    },
+    'Super Mario Galaxy 2': {
+        date: '2010',
+        platform: Platforms.WII
+    },
+    'Super Mario Land': {
+        date: '1989',
+        platform: Platforms.GAMEBOY
+    },
+    'Super Mario Odyssey': {
+        date: '2017',
+        platform: Platforms.SWITCH
+    },
+    'Super Mario RPG': {
+        date: '2023',
+        platform: Platforms.SWITCH
+    },
+    'Super Mario Sunshine': {
+        date: '2002',
+        platform: Platforms.GAMECUBE
+    },
+    'Super Mario World': {
+        date: '1991',
+        platform: Platforms.SUPER_NES
+    },
 }
