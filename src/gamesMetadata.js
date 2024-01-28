@@ -42,7 +42,7 @@ export const gamesMetadata = {
     },
     'Banjo Kazooie': {
         date: '1998',
-        platform: Platforms['NINTENDO64'],
+        platform: Platforms.NINTENDO64,
     },
     'Billy Hatcher and the Giant Egg': {
         date: '2003',
@@ -688,9 +688,17 @@ export const gamesMetadata = {
         date: '1995',
         platform: Platforms.SUPER_NES
     },
+    'Tetris': {
+        date: '1989',
+        platform: Platforms.GAMEBOY
+    },
     'The Messenger': {
         date: '2018',
         platform: Platforms.SWITCH
+    },
+    'The Story of Thor': {
+        date: '1994',
+        platform: Platforms.MEGADRIVE
     },
     'The Witcher 3 Wild Hunt': {
         date: '2015',
