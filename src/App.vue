@@ -26,6 +26,10 @@ const songState = ref({
   canplaythrough: false,
 });
 
+const nextSongState = {
+  canplaythrough: false
+}
+
 const songs = getShuffledSongs();
 const indexSong = ref(0);
 
@@ -124,13 +128,22 @@ watch(
 
     if (audio) stopAndRemoveOldAudio();
 
-    audio = new Audio(`${songToPlay}.mp3`);
+    if (!nextSongState.canplaythrough) {
+      audio = nextAudio;
+      nextSongState.canplaythrough = false
+    } else {
+      audio = new Audio(`${songToPlay}.mp3`);
+    }
     songState.value.src = `${songToPlay}.mp3`;
     addEventListeners();
     audio.play();
   },
   { immediate: true }
 );
+
+const nextAudioCanPlayThrough = () => {
+  nextSongState.canplaythrough = true
+}
 
 watch(
   () => songState.value.canplaythrough,
@@ -139,8 +152,9 @@ watch(
 
     const nextSongToPlay = songs[indexSong.value + 1];
 
-    const nextAudio = new Audio(`${nextSongToPlay}.mp3`);
+    nextAudio = new Audio(`${nextSongToPlay}.mp3`);
     nextAudio.load();
+    nextAudio.addEventListener("canplaythrough", nextAudioCanPlayThrough)
     songState.value.canplaythrough = false;
   },
   { immediate: true }
