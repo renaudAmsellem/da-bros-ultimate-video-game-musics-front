@@ -3,7 +3,7 @@ import { computed, ref, watch } from "vue";
 import Stars from "./components/Stars.vue";
 import WaitingList from "./components/WaitingList.vue";
 import Player from "./components/Player.vue";
-import ProgressBar from "./components/ProgressBar.vue";
+import ProgressBar from "./components/ProgressBar.vue"
 import KeyboardEventListener from "./components/KeyboardEventListener.vue";
 import { getShuffledSongs } from "./helpers/getShuffledSongs";
 import { gamesMetadata } from "./gamesMetadata";
@@ -128,22 +128,13 @@ watch(
 
     if (audio) stopAndRemoveOldAudio();
 
-    if (!nextSongState.canplaythrough) {
-      audio = nextAudio;
-      nextSongState.canplaythrough = false
-    } else {
-      audio = new Audio(`${songToPlay}.mp3`);
-    }
+    audio = new Audio(`${songToPlay}.mp3`);
     songState.value.src = `${songToPlay}.mp3`;
     addEventListeners();
     audio.play();
   },
   { immediate: true }
 );
-
-const nextAudioCanPlayThrough = () => {
-  nextSongState.canplaythrough = true
-}
 
 watch(
   () => songState.value.canplaythrough,
@@ -154,7 +145,6 @@ watch(
 
     nextAudio = new Audio(`${nextSongToPlay}.mp3`);
     nextAudio.load();
-    nextAudio.addEventListener("canplaythrough", nextAudioCanPlayThrough)
     songState.value.canplaythrough = false;
   },
   { immediate: true }
