@@ -1,111 +1,150 @@
-<script setup>
-import { computed, ref, watch } from 'vue';
-import Stars from './components/Stars.vue';
-import WaitingList from './components/WaitingList.vue';
-import ProgressBar from './components/ProgressBar.vue';
-import Player from './components/Player.vue';
-import KeyboardEventListener from './components/KeyboardEventListener.vue';
-import {getShuffledSongs} from './helpers/getShuffledSongs'
-import {gamesMetadata} from './gamesMetadata'
+<script setup lang="js">
+import { computed, ref, watch } from "vue";
+import Stars from "./components/Stars.vue";
+import WaitingList from "./components/WaitingList.vue";
+import Player from "./components/Player.vue";
+import ProgressBar from "./components/ProgressBar.vue";
+import KeyboardEventListener from "./components/KeyboardEventListener.vue";
+import { getShuffledSongs } from "./helpers/getShuffledSongs";
+import { gamesMetadata } from "./gamesMetadata";
 
 let audio;
-const song = ref({
-  name: '',
-  progress: 0,
-  duration: 0
-})
-const isPaused = ref(true);
+let nextAudio;
 
-const songs = getShuffledSongs()
-const indexSong = ref(0)
+const song = ref({
+  name: "",
+  progress: 0,
+  duration: 0,
+  gameName: "",
+  metadata: {},
+});
+
+const songState = ref({
+  paused: true,
+  playing: false,
+  waiting: false,
+  canplaythrough: false,
+});
+
+const songs = getShuffledSongs();
+const indexSong = ref(0);
 
 const waitingList = computed(() => {
-  const list = []
-  for (let i = 1 ; i <= 5 ; i ++) {
-    list.push(songs[indexSong.value + i])
+  const list = [];
+  for (let i = 1; i <= 5; i++) {
+    list.push(songs[indexSong.value + i]);
   }
-  return list
-})
+  return list;
+});
 
 const playPreviousSong = () => {
-  if (indexSong.value === 0) return
+  if (song.value.progress > 3) return restartCurrentSong();
 
-  indexSong.value = indexSong.value - 1
-}
+  if (indexSong.value === 0) return;
+
+  indexSong.value = indexSong.value - 1;
+};
 
 const playNextSong = () => {
   if (indexSong.value === songs.length) {
     indexSong.value = 0;
-    return
+    return;
   }
-  
-  indexSong.value = indexSong.value + 1
-}
+
+  indexSong.value = indexSong.value + 1;
+};
+
+const restartCurrentSong = () => {
+  audio.pause();
+  audio.currentTime = 0;
+  audio.play();
+};
 
 const selectSong = (index) => {
-  indexSong.value = indexSong.value + index + 1
-}
-
-const play = () => {
-  audio.play()
-  isPaused.value = false
-}
-
-const pause = () => {
-  audio.pause()
-  isPaused.value = true
-}
+  indexSong.value = indexSong.value + index + 1;
+};
 
 const togglePlayPause = () => {
-  if (isPaused.value === true) return play()
-  return pause()
-}
+  if (songState.value.paused === true) return play();
+  return pause();
+};
 
-const previous = () => {
-  pause()
-  playPreviousSong()
-  play()
-  isPaused.value = false
-}
+const seek = time => audio.currentTime = time
+const seekForward = () => audio.currentTime += 10
+const seekBackward = () => audio.currentTime -= 10
 
-const next = () => {
-  pause()
-  playNextSong()
-  play()
-  isPaused.value = false
-}
+const play = () => audio.play();
+const pause = () => audio.pause();
+const canplaythrough = () => (songState.value.canplaythrough = true);
+const ended = () => playNextSong()
+const timeupdate = () => (song.value.progress = audio.currentTime);
+const loadedmetadata = () => (song.value.duration = audio.duration);
+const paused = () => {
+  songState.value.playing = false;
+  songState.value.paused = true;
+};
+const playing = () => {
+  songState.value.playing = true;
+  songState.value.paused = false;
+};
 
-const seek = (time) => {
-  audio.currentTime = time
-}
+const addEventListeners = () => {
+  audio.addEventListener("canplaythrough", canplaythrough);
+  audio.addEventListener("ended", ended);
+  audio.addEventListener("loadedmetadata", loadedmetadata);
+  audio.addEventListener("pause", paused);
+  audio.addEventListener("playing", playing);
+  audio.addEventListener("timeupdate", timeupdate);
+};
 
-watch(indexSong, () => {
-  if (audio) audio.pause()
-  const songToPlay = songs[indexSong.value]
-  const gameName = songToPlay.substring(0, songToPlay.indexOf(' -'))
-  const songMetadata = gamesMetadata[gameName]
-  song.value.name = songToPlay
-  audio = new Audio(songToPlay + '.mp3')
-  audio.addEventListener("ended", next);
-  audio.addEventListener("timeupdate", () =>  song.value.progress = audio.currentTime);
-  audio.addEventListener("loadedmetadata", () =>  song.value.duration = audio.duration);
-  // audio.addEventListener("audioprocess", () =>  console.log('audioprocess'));
-  // audio.addEventListener("canplay", () =>  console.log('canplay'));
-  // audio.addEventListener("canplaythrough", () =>  console.log('canplaythrough'));
-  // audio.addEventListener("complete", () =>  console.log('complete'));
-  // audio.addEventListener("loadeddata", () =>  console.log('loadeddata'));
-  // audio.addEventListener("loadedmetadata", () =>  console.log('loadedmetadata'));
-  // audio.addEventListener("loadstart", () =>  console.log('loadstart'));
-  // audio.addEventListener("pause", () =>  console.log('pause'));
-  // audio.addEventListener("play", () =>  console.log('play'));
-  // audio.addEventListener("playing", () =>  console.log('playing'));
-  // audio.addEventListener("seeked", () =>  console.log('seeked'));
-  // audio.addEventListener("seeking", () =>  console.log('seeking'));
-  // audio.addEventListener("stalled", () =>  console.log('stalled'));
-  // audio.addEventListener("suspend", () =>  console.log('suspend'));
-  // audio.addEventListener("waiting", () =>  console.log('waiting'));
-  audio.play()
-}, {immediate: true})
+const removeEventListeners = () => {
+  audio.removeEventListener("canplaythrough", canplaythrough);
+  audio.removeEventListener("ended", ended);
+  audio.removeEventListener("loadedmetadata", loadedmetadata);
+  audio.removeEventListener("pause", pause);
+  audio.removeEventListener("playing", playing);
+  audio.removeEventListener("timeupdate", timeupdate);
+};
+
+const stopAndRemoveOldAudio = () => {
+  removeEventListeners();
+  audio.pause();
+  audio.currentTime = 0;
+};
+
+watch(
+  () => indexSong.value,
+  () => {
+    const songToPlay = songs[indexSong.value];
+    const gameName = songToPlay.substring(0, songToPlay.indexOf(" -"));
+    const songMetadata = gamesMetadata[gameName];
+    song.value.name = songToPlay;
+    song.value.gameName = gameName;
+    song.value.metadata = songMetadata;
+
+    if (audio) stopAndRemoveOldAudio();
+
+    audio = new Audio(`${songToPlay}.mp3`);
+    songState.value.src = `${songToPlay}.mp3`;
+    addEventListeners();
+    audio.play();
+  },
+  { immediate: true }
+);
+
+watch(
+  () => songState.value.canplaythrough,
+  () => {
+    if (!songState.value.canplaythrough) return;
+
+    const nextSongToPlay = songs[indexSong.value + 1];
+
+    const nextAudio = new Audio(`${nextSongToPlay}.mp3`);
+    nextAudio.load();
+    songState.value.canplaythrough = false;
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -114,15 +153,36 @@ watch(indexSong, () => {
       <img src="./assets/mario_listening_music.png" alt="Album cover" />
     </div>
     <div class="wrapper">
-      <ProgressBar :progress="song.progress" :duration="song.duration" @seek="seek" />
+      <ProgressBar
+        :progress="song.progress"
+        :duration="song.duration"
+        @seek="seek"
+      />
 
       <WaitingList :waiting-list="waitingList" @selectSong="selectSong" />
 
-      <Player :songName="song.name" :isPaused="isPaused" @play="play" @pause="pause" @next="next" @previous="previous" />
+      <Player
+        :songName="song.name"
+        :isPaused="songState.paused"
+        @play="play"
+        @pause="pause"
+        @next="playNextSong"
+        @previous="playPreviousSong"
+      />
 
       <Stars class="stars" :songName="song.name" />
 
-      <KeyboardEventListener :songName="song.name" @play="play" @pause="pause" @previous="previous" @next="next" @togglePlayPause="togglePlayPause" />
+      <KeyboardEventListener
+        :songName="song.name"
+        :gameName="song.gameName"
+        @play="play"
+        @pause="pause"
+        @previous="playPreviousSong"
+        @next="playNextSong"
+        @togglePlayPause="togglePlayPause"
+        @seekBackward="seekBackward"
+        @seekForward="seekForward"
+      />
     </div>
   </div>
 </template>
@@ -130,11 +190,11 @@ watch(indexSong, () => {
 <style lang="scss">
 html {
   font-size: 16px;
-  height: 100%
+  height: 100%;
 }
 
 body {
-  font-family: 'Roboto', Arial, Verdana, sans-serif;
+  font-family: "Roboto", Arial, Verdana, sans-serif;
   background: #e4f2fb;
   height: 100%;
 }
@@ -146,7 +206,9 @@ body {
   align-items: center;
   background: #fff;
   border-radius: 4px;
-  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .19), 0 6px 6px -10px rgba(0, 0, 0, .23);;
+  box-shadow:
+    0 10px 20px -5px rgba(0, 0, 0, 0.19),
+    0 6px 6px -10px rgba(0, 0, 0, 0.23);
 
   @media screen and (min-width: 780px) {
     width: 780px;
@@ -187,6 +249,6 @@ img {
 }
 
 li {
-    cursor: pointer;
+  cursor: pointer;
 }
 </style>
