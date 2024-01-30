@@ -136,19 +136,19 @@ watch(
   { immediate: true }
 );
 
-watch(
-  () => songState.value.canplaythrough,
-  () => {
-    if (!songState.value.canplaythrough) return;
+// watch(
+//   () => songState.value.canplaythrough,
+//   () => {
+//     if (!songState.value.canplaythrough) return;
 
-    const nextSongToPlay = songs[indexSong.value + 1];
+//     const nextSongToPlay = songs[indexSong.value + 1];
 
-    nextAudio = new Audio(`${nextSongToPlay}.mp3`);
-    nextAudio.load();
-    songState.value.canplaythrough = false;
-  },
-  { immediate: true }
-);
+//     nextAudio = new Audio(`${nextSongToPlay}.mp3`);
+//     nextAudio.load();
+//     songState.value.canplaythrough = false;
+//   },
+//   { immediate: true }
+// );
 </script>
 
 <template>
