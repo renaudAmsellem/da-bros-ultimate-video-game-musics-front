@@ -109,7 +109,7 @@ watch(
     if (audio) audio.unload();
 
     audio = new Howl({
-      src: [`${songToPlay}.mp3`],
+      src: [`${songToPlay}.webm`, `${songToPlay}.mp3`],
       html5: true,
       onend,
       onload,
