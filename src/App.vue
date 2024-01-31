@@ -67,14 +67,13 @@ const togglePlayPause = () => {
   return pause();
 };
 
-const seek = time => audio.currentTime = time
-const seekForward = () => audio.currentTime += 10
-const seekBackward = () => audio.currentTime -= 10
+const seek = time => audio.seek(time)
+const seekForward = () => audio.seek(audio.seek() + 10)
+const seekBackward = () => audio.seek(audio.seek() - 10)
 
 const play = () => audio.play();
 const pause = () => audio.pause();
 const onend = () => playNextSong()
-const ontimeupdate = () => (song.value.progress = audio.currentTime);
 const onload = () => (song.value.duration = audio.duration());
 const onpause = () => {
   songState.value.playing = false;
@@ -114,8 +113,7 @@ watch(
       onend,
       onload,
       onpause,
-      onplay,
-      ontimeupdate
+      onplay
     });
     audio.play()
   },
