@@ -7,6 +7,7 @@ import ProgressBar from "./components/ProgressBar.vue"
 import KeyboardEventListener from "./components/KeyboardEventListener.vue";
 import { getShuffledSongs } from "./helpers/getShuffledSongs";
 import { gamesMetadata } from "./gamesMetadata";
+import {Howl} from 'howler';
 
 let audio;
 
@@ -21,13 +22,7 @@ const song = ref({
 const songState = ref({
   paused: true,
   playing: false,
-  waiting: false,
-  canplaythrough: false,
 });
-
-const nextSongState = {
-  canplaythrough: false
-}
 
 const songs = getShuffledSongs();
 const indexSong = ref(0);
@@ -58,7 +53,7 @@ const playNextSong = () => {
 };
 
 const restartCurrentSong = () => {
-  audio.pause();
+  audio.stop();
   audio.currentTime = 0;
   audio.play();
 };
@@ -78,53 +73,26 @@ const seekBackward = () => audio.currentTime -= 10
 
 const play = () => audio.play();
 const pause = () => audio.pause();
-const canplaythrough = () => (songState.value.canplaythrough = true);
-const ended = () => playNextSong()
-const timeupdate = () => (song.value.progress = audio.currentTime);
-const loadedmetadata = () => (song.value.duration = audio.duration);
-const paused = () => {
+const onend = () => playNextSong()
+const ontimeupdate = () => (song.value.progress = audio.currentTime);
+const onload = () => (song.value.duration = audio.duration());
+const onpause = () => {
   songState.value.playing = false;
   songState.value.paused = true;
 };
-const playing = () => {
+const onplay = () => {
   songState.value.playing = true;
   songState.value.paused = false;
+  requestAnimationFrame(step);
 };
 
-const addEventListeners = () => {
-  audio.addEventListener("canplaythrough", canplaythrough);
-  audio.addEventListener("ended", ended);
-  audio.addEventListener("loadedmetadata", loadedmetadata);
-  audio.addEventListener("pause", paused);
-  audio.addEventListener("playing", playing);
-  audio.addEventListener("timeupdate", timeupdate);
-};
-
-const removeEventListeners = () => {
-  audio.removeEventListener("canplaythrough", canplaythrough);
-  audio.removeEventListener("ended", ended);
-  audio.removeEventListener("loadedmetadata", loadedmetadata);
-  audio.removeEventListener("pause", pause);
-  audio.removeEventListener("playing", playing);
-  audio.removeEventListener("timeupdate", timeupdate);
-};
-
-const stopAndRemoveOldAudio = () => {
-  removeEventListeners();
-  audio.pause();
-  audio.currentTime = 0;
-};
-
-const readChunks = (reader) => {
-    return {
-        async* [Symbol.asyncIterator]() {
-            let readResult = await reader.read();
-            while (!readResult.done) {
-                yield readResult.value;
-                readResult = await reader.read();
-            }
-        },
-    };
+const step = () => {
+  const currentTime = audio.seek() || 0;
+  song.value.progress = currentTime
+  songState
+  if (audio.playing()) {
+    requestAnimationFrame(step);
+  }
 }
 
 watch(
@@ -138,36 +106,21 @@ watch(
     song.value.metadata = songMetadata;
     songState.value.src = `${songToPlay}.mp3`;
 
-    if (audio) stopAndRemoveOldAudio();
+    if (audio) audio.unload();
 
-    audio = new Audio(`Soleil - Anemone Beach.opus`);
-    addEventListeners();
-    audio.play();
-
-    // let chunks = []
-    // fetch(`${songToPlay}.mp3`)
-    // .then(async (response) => {
-    //     // response.body is a ReadableStream
-    //     const reader = response.body.getReader();
-    //     for await (const chunk of readChunks(reader)) {
-    //         console.log(`received chunk of size ${chunk.length}`);
-    //         chunks.push(chunk)
-    //         let audiodata = await ctx.decodeAudioData(chunk)
-
-    //     }
-    // })
-
-    // const blob = new Blob(chunks, { type: "audio/mp3" });
-    // chunks = [];
-    // const audioURL = window.URL.createObjectURL(blob);
-    // new Audio(audioURL)
-      
+    audio = new Howl({
+      src: [`${songToPlay}.mp3`],
+      html5: true,
+      onend,
+      onload,
+      onpause,
+      onplay,
+      ontimeupdate
+    });
+    audio.play()
   },
   { immediate: true }
 );
-
-
-
 </script>
 
 <template>
