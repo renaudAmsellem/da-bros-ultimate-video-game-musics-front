@@ -9,7 +9,6 @@ import { getShuffledSongs } from "./helpers/getShuffledSongs";
 import { gamesMetadata } from "./gamesMetadata";
 
 let audio;
-let nextAudio;
 
 const song = ref({
   name: "",
@@ -116,6 +115,18 @@ const stopAndRemoveOldAudio = () => {
   audio.currentTime = 0;
 };
 
+const readChunks = (reader) => {
+    return {
+        async* [Symbol.asyncIterator]() {
+            let readResult = await reader.read();
+            while (!readResult.done) {
+                yield readResult.value;
+                readResult = await reader.read();
+            }
+        },
+    };
+}
+
 watch(
   () => indexSong.value,
   () => {
@@ -125,30 +136,38 @@ watch(
     song.value.name = songToPlay;
     song.value.gameName = gameName;
     song.value.metadata = songMetadata;
+    songState.value.src = `${songToPlay}.mp3`;
 
     if (audio) stopAndRemoveOldAudio();
 
-    audio = new Audio(`${songToPlay}.mp3`);
-    songState.value.src = `${songToPlay}.mp3`;
+    audio = new Audio(`Soleil - Anemone Beach.opus`);
     addEventListeners();
     audio.play();
+
+    // let chunks = []
+    // fetch(`${songToPlay}.mp3`)
+    // .then(async (response) => {
+    //     // response.body is a ReadableStream
+    //     const reader = response.body.getReader();
+    //     for await (const chunk of readChunks(reader)) {
+    //         console.log(`received chunk of size ${chunk.length}`);
+    //         chunks.push(chunk)
+    //         let audiodata = await ctx.decodeAudioData(chunk)
+
+    //     }
+    // })
+
+    // const blob = new Blob(chunks, { type: "audio/mp3" });
+    // chunks = [];
+    // const audioURL = window.URL.createObjectURL(blob);
+    // new Audio(audioURL)
+      
   },
   { immediate: true }
 );
 
-// watch(
-//   () => songState.value.canplaythrough,
-//   () => {
-//     if (!songState.value.canplaythrough) return;
 
-//     const nextSongToPlay = songs[indexSong.value + 1];
 
-//     nextAudio = new Audio(`${nextSongToPlay}.mp3`);
-//     nextAudio.load();
-//     songState.value.canplaythrough = false;
-//   },
-//   { immediate: true }
-// );
 </script>
 
 <template>
