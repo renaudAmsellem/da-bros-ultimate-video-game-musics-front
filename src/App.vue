@@ -7,7 +7,6 @@ import ProgressBar from "./components/ProgressBar.vue"
 import KeyboardEventListener from "./components/KeyboardEventListener.vue";
 import { getShuffledSongs } from "./helpers/getShuffledSongs";
 import { gamesMetadata } from "./gamesMetadata";
-import {Howl} from 'howler';
 
 let audio;
 
@@ -22,6 +21,8 @@ const song = ref({
 const songState = ref({
   paused: true,
   playing: false,
+  waiting: false,
+  canplaythrough: false,
 });
 
 const songs = getShuffledSongs();
@@ -53,7 +54,7 @@ const playNextSong = () => {
 };
 
 const restartCurrentSong = () => {
-  audio.stop();
+  audio.pause();
   audio.currentTime = 0;
   audio.play();
 };
@@ -67,55 +68,66 @@ const togglePlayPause = () => {
   return pause();
 };
 
-const seek = time => audio.seek(time)
-const seekForward = () => audio.seek(audio.seek() + 10)
-const seekBackward = () => audio.seek(audio.seek() - 10)
+const seek = time => audio.currentTime = time
+const seekForward = () => audio.currentTime += 10
+const seekBackward = () => audio.currentTime -= 10
 
 const play = () => audio.play();
 const pause = () => audio.pause();
-const onend = () => playNextSong()
-const onload = () => (song.value.duration = audio.duration());
-const onpause = () => {
+const canplaythrough = () => (songState.value.canplaythrough = true);
+const ended = () => playNextSong()
+const timeupdate = () => (song.value.progress = audio.currentTime);
+const loadedmetadata = () => (song.value.duration = audio.duration);
+const paused = () => {
   songState.value.playing = false;
   songState.value.paused = true;
 };
-const onplay = () => {
+const playing = () => {
   songState.value.playing = true;
   songState.value.paused = false;
-  requestAnimationFrame(step);
 };
 
-const step = () => {
-  const currentTime = audio.seek() || 0;
-  song.value.progress = currentTime
-  songState
-  if (audio.playing()) {
-    requestAnimationFrame(step);
-  }
-}
+const addEventListeners = () => {
+  audio.addEventListener("canplaythrough", canplaythrough);
+  audio.addEventListener("ended", ended);
+  audio.addEventListener("loadedmetadata", loadedmetadata);
+  audio.addEventListener("pause", paused);
+  audio.addEventListener("playing", playing);
+  audio.addEventListener("timeupdate", timeupdate);
+};
+
+const removeEventListeners = () => {
+  audio.removeEventListener("canplaythrough", canplaythrough);
+  audio.removeEventListener("ended", ended);
+  audio.removeEventListener("loadedmetadata", loadedmetadata);
+  audio.removeEventListener("pause", pause);
+  audio.removeEventListener("playing", playing);
+  audio.removeEventListener("timeupdate", timeupdate);
+};
+
+const stopAndRemoveOldAudio = () => {
+  removeEventListeners();
+  audio.src = '';
+  audio.load()
+};
 
 watch(
   () => indexSong.value,
   () => {
-    const songToPlay = songs[indexSong.value];
-    const gameName = songToPlay.substring(0, songToPlay.indexOf(" -"));
+    const songName = songs[indexSong.value];
+    const gameName = songName.substring(0, songName.indexOf(" -"));
     const songMetadata = gamesMetadata[gameName];
-    song.value.name = songToPlay;
+    const songNameWithExtension = `${songName}.webm`
+    song.value.name = songName;
     song.value.gameName = gameName;
     song.value.metadata = songMetadata;
-    songState.value.src = `${songToPlay}.mp3`;
+    songState.value.src = songNameWithExtension;
 
-    if (audio) audio.unload();
+    if (audio) stopAndRemoveOldAudio();
 
-    audio = new Howl({
-      src: [`${songToPlay}.webm`, `${songToPlay}.mp3`],
-      html5: true,
-      onend,
-      onload,
-      onpause,
-      onplay
-    });
-    audio.play()
+    audio = new Audio(songNameWithExtension);
+    addEventListeners();
+    audio.play();  
   },
   { immediate: true }
 );
