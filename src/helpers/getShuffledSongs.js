@@ -18,4 +18,4 @@ const shuffle = (array) => {
     return array;
 }
 
-export const getShuffledSongs = () => shuffle(musicNames.split('.mp3,').map(musicName => musicName.replace('.mp3', '')))
+export const getShuffledSongs = () => shuffle(musicNames.split('.webm,').map(musicName => musicName.replace('.webm', '')))
