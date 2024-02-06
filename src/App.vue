@@ -7,6 +7,7 @@ import ProgressBar from "./components/ProgressBar.vue"
 import KeyboardEventListener from "./components/KeyboardEventListener.vue";
 import { getShuffledSongs } from "./helpers/getShuffledSongs";
 import { gamesMetadata } from "./gamesMetadata";
+import { isWebmSupported } from './helpers/supportedFormats'
 
 let audio;
 
@@ -117,7 +118,9 @@ watch(
     const songName = songs[indexSong.value];
     const gameName = songName.substring(0, songName.indexOf(" -"));
     const songMetadata = gamesMetadata[gameName];
-    const songNameWithExtension = `${songName}.webm`
+    let extension = 'mp3'
+    if (isWebmSupported) extension = 'webm'
+    const songNameWithExtension = `${songName}.${extension}`
     song.value.name = songName;
     song.value.gameName = gameName;
     song.value.metadata = songMetadata;
