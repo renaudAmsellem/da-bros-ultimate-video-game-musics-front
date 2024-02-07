@@ -1,5 +1,5 @@
-const isFormatSupported = (format) => {
-    return new Audio().canPlayType(format) !== ""
-}
+// const isFormatSupported = (format) => {
+//     return new Audio().canPlayType(format) !== ""
+// }
 
-export const isWebmSupported = isFormatSupported('audio/webm')
+// export const isWebmSupported = isFormatSupported('audio/webm')
