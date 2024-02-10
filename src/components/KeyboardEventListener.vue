@@ -29,12 +29,12 @@ watch(
 
       navigator.mediaSession.setActionHandler("play", () => emit("play"));
       navigator.mediaSession.setActionHandler("pause", () => emit("pause"));
-      navigator.mediaSession.setActionHandler("seekbackward", () =>
-        emit("seekBackward")
-      );
-      navigator.mediaSession.setActionHandler("seekforward", () =>
-        emit("seekForward")
-      );
+      // navigator.mediaSession.setActionHandler("seekbackward", () =>
+      //   emit("seekBackward")
+      // );
+      // navigator.mediaSession.setActionHandler("seekforward", () =>
+      //   emit("seekForward")
+      // );
       navigator.mediaSession.setActionHandler("previoustrack", () =>
         emit("previous")
       );

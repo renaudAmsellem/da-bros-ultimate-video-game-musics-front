@@ -7,7 +7,7 @@ import ProgressBar from "./components/ProgressBar.vue"
 import KeyboardEventListener from "./components/KeyboardEventListener.vue";
 import { getShuffledSongs } from "./helpers/getShuffledSongs";
 import { gamesMetadata } from "./gamesMetadata";
-// import { isWebmSupported } from './helpers/supportedFormats'
+import { isWebmSupported } from './helpers/supportedFormats'
 
 let audio;
 
@@ -75,10 +75,10 @@ const seekBackward = () => audio.currentTime -= 10
 
 const play = () => audio.play();
 const pause = () => audio.pause();
-const canplaythrough = () => (songState.value.canplaythrough = true);
+const canplaythrough = () => songState.value.canplaythrough = true
 const ended = () => playNextSong()
-const timeupdate = () => (song.value.progress = audio.currentTime);
-const loadedmetadata = () => (song.value.duration = audio.duration);
+const timeupdate = () => song.value.progress = audio.currentTime
+const loadedmetadata = () => song.value.duration = audio.duration
 const paused = () => {
   songState.value.playing = false;
   songState.value.paused = true;
@@ -108,7 +108,7 @@ const removeEventListeners = () => {
 
 const stopAndRemoveOldAudio = () => {
   removeEventListeners();
-  audio.src = '';
+  // audio.src = '';
   audio.load()
 };
 
@@ -119,7 +119,7 @@ watch(
     const gameName = songName.substring(0, songName.indexOf(" -"));
     const songMetadata = gamesMetadata[gameName];
     let extension = 'mp3'
-    // if (isWebmSupported) extension = 'webm'
+    if (isWebmSupported) extension = 'webm'
     const songNameWithExtension = `${songName}.${extension}`
     song.value.name = songName;
     song.value.gameName = gameName;
