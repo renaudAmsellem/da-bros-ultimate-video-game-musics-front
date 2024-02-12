@@ -1,7 +1,7 @@
 <script setup>
 import { watch } from "vue";
 
-const props = defineProps(["songName", "gameName"]);
+const props = defineProps(["gameAndSongName", "gameName"]);
 const emit = defineEmits([
   "play",
   "pause",
@@ -13,14 +13,18 @@ const emit = defineEmits([
 ]);
 
 watch(
-  () => props.songName,
+  () => props.gameAndSongName,
   () => {
-    if ("mediaSession" in navigator && props.songName && props.gameName) {
+    if (
+      "mediaSession" in navigator &&
+      props.gameAndSongName &&
+      props.gameName
+    ) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: props.songName,
+        title: props.gameAndSongName,
         artwork: [
           {
-            src: `/covers/${props.gameName}.png`,
+            src: `/covers/${props.gameName.replace("&", "and")}.png`,
             sizes: "264x352",
             type: "image/png",
           },

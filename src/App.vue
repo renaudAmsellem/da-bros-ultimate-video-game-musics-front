@@ -1,13 +1,20 @@
 <script setup lang="js">
 import { computed, ref, watch } from "vue";
-import Stars from "./components/Stars.vue";
-import WaitingList from "./components/WaitingList.vue";
+import MobileLayout from "./layouts/MobileLayout.vue";
+import Like from "./components/Like.vue";
+import Share from "./components/Share.vue";
+import SmallJacket from "./components/SmallJacket.vue";
 import Player from "./components/Player.vue";
-import ProgressBar from "./components/ProgressBar.vue"
+import ProgressBar from "./components/ProgressBar.vue";
 import KeyboardEventListener from "./components/KeyboardEventListener.vue";
+import MobileSongsView from "./components/MobileSongsView.vue";
+import DesktopSongsView from "./components/DesktopSongsView.vue";
 import { getShuffledSongs } from "./helpers/getShuffledSongs";
 import { gamesMetadata } from "./gamesMetadata";
-import { isWebmSupported } from './helpers/supportedFormats'
+import { isWebmSupported } from "./helpers/supportedFormats";
+import { getGameName, getSongName } from "./helpers/parseSong";
+import { useWindowResize } from "./composables/useWindowResize";
+import "./index.css";
 
 let audio;
 
@@ -16,26 +23,17 @@ const song = ref({
   progress: 0,
   duration: 0,
   gameName: "",
+  songName: "",
   metadata: {},
 });
 
 const songState = ref({
   paused: true,
   playing: false,
-  waiting: false,
-  canplaythrough: false,
 });
 
 const songs = getShuffledSongs();
 const indexSong = ref(0);
-
-const waitingList = computed(() => {
-  const list = [];
-  for (let i = 1; i <= 5; i++) {
-    list.push(songs[indexSong.value + i]);
-  }
-  return list;
-});
 
 const playPreviousSong = () => {
   if (song.value.progress > 3) return restartCurrentSong();
@@ -61,7 +59,7 @@ const restartCurrentSong = () => {
 };
 
 const selectSong = (index) => {
-  indexSong.value = indexSong.value + index + 1;
+  indexSong.value = index;
 };
 
 const togglePlayPause = () => {
@@ -69,16 +67,15 @@ const togglePlayPause = () => {
   return pause();
 };
 
-const seek = time => audio.currentTime = time
-const seekForward = () => audio.currentTime += 10
-const seekBackward = () => audio.currentTime -= 10
+const seek = (time) => (audio.currentTime = time);
+const seekForward = () => (audio.currentTime += 10);
+const seekBackward = () => (audio.currentTime -= 10);
 
 const play = () => audio.play();
 const pause = () => audio.pause();
-const canplaythrough = () => songState.value.canplaythrough = true
-const ended = () => playNextSong()
-const timeupdate = () => song.value.progress = audio.currentTime
-const loadedmetadata = () => song.value.duration = audio.duration
+const ended = () => playNextSong();
+const timeupdate = () => (song.value.progress = audio.currentTime);
+const loadedmetadata = () => (song.value.duration = audio.duration);
 const paused = () => {
   songState.value.playing = false;
   songState.value.paused = true;
@@ -89,7 +86,6 @@ const playing = () => {
 };
 
 const addEventListeners = () => {
-  audio.addEventListener("canplaythrough", canplaythrough);
   audio.addEventListener("ended", ended);
   audio.addEventListener("loadedmetadata", loadedmetadata);
   audio.addEventListener("pause", paused);
@@ -98,7 +94,6 @@ const addEventListeners = () => {
 };
 
 const removeEventListeners = () => {
-  audio.removeEventListener("canplaythrough", canplaythrough);
   audio.removeEventListener("ended", ended);
   audio.removeEventListener("loadedmetadata", loadedmetadata);
   audio.removeEventListener("pause", pause);
@@ -109,135 +104,136 @@ const removeEventListeners = () => {
 const stopAndRemoveOldAudio = () => {
   removeEventListeners();
   // audio.src = '';
-  audio.load()
+  audio.load();
 };
 
 watch(
   () => indexSong.value,
   () => {
-    const songName = songs[indexSong.value];
-    const gameName = songName.substring(0, songName.indexOf(" -"));
+    const gameAndSongName = songs[indexSong.value];
+    const gameName = getGameName(gameAndSongName);
+    const songName = getSongName(gameAndSongName);
     const songMetadata = gamesMetadata[gameName];
-    let extension = 'mp3'
-    if (isWebmSupported) extension = 'webm'
-    const songNameWithExtension = `${songName}.${extension}`
-    song.value.name = songName;
+    let extension = "mp3";
+    if (isWebmSupported) extension = "webm";
+    const gameAndSongNameWithExtension = `${gameAndSongName}.${extension}`;
+    song.value.name = gameAndSongName;
     song.value.gameName = gameName;
+    song.value.songName = songName;
     song.value.metadata = songMetadata;
-    songState.value.src = songNameWithExtension;
+    songState.value.src = gameAndSongNameWithExtension;
 
     if (audio) stopAndRemoveOldAudio();
 
-    audio = new Audio(songNameWithExtension);
+    audio = new Audio(gameAndSongNameWithExtension);
     addEventListeners();
-    audio.play();  
+    audio.play();
   },
   { immediate: true }
 );
+
+const { width } = useWindowResize();
 </script>
 
 <template>
-  <div class="player__container">
-    <div class="mario_image">
-      <img src="./assets/mario_listening_music.png" alt="Album cover" />
+  <h1 class="text-center text-xl font-bold my-5">oidaЯ Rabio</h1>
+
+  <MobileLayout v-if="width < 768">
+    <MobileSongsView :songs="songs" :currentIndex="indexSong" />
+
+    <div class="absolute left-0 right-0 bottom-12 h-15">
+      <div class="mb-3">
+        <ProgressBar
+          class="progress-bar"
+          :progress="song.progress"
+          :duration="song.duration"
+          @seek="seek"
+        />
+      </div>
+      <Player
+        :isPaused="songState.paused"
+        @togglePlayPause="togglePlayPause"
+        @next="playNextSong"
+        @previous="playPreviousSong"
+      />
+      <Share class="absolute left-3 bottom-1" :songName="song.name" />
+      <Like class="absolute right-3 bottom-1" :songName="song.name" />
     </div>
-    <div class="wrapper">
+  </MobileLayout>
+
+  <div v-else class="h-full my-auto">
+    <DesktopSongsView
+      class="h-full my-auto"
+      :songs="songs"
+      :currentIndex="indexSong"
+      @selectSong="selectSong"
+    />
+
+    <div
+      class="desktop-player-wrapper fixed left-5 right-5 bottom-5 p-2 h-23 rounded-lg flex"
+    >
+      <SmallJacket
+        class="small-jacket"
+        :songName="song.songName"
+        :gameName="song.gameName"
+      />
+      <Player
+        class="player absolute"
+        :isPaused="songState.paused"
+        @togglePlayPause="togglePlayPause"
+        @next="playNextSong"
+        @previous="playPreviousSong"
+      />
       <ProgressBar
+        class="progress-bar absolute"
         :progress="song.progress"
         :duration="song.duration"
         @seek="seek"
       />
-
-      <WaitingList :waiting-list="waitingList" @selectSong="selectSong" />
-
-      <Player
-        :songName="song.name"
-        :isPaused="songState.paused"
-        @play="play"
-        @pause="pause"
-        @next="playNextSong"
-        @previous="playPreviousSong"
-      />
-
-      <Stars class="stars" :songName="song.name" />
-
-      <KeyboardEventListener
-        :songName="song.name"
-        :gameName="song.gameName"
-        @play="play"
-        @pause="pause"
-        @previous="playPreviousSong"
-        @next="playNextSong"
-        @togglePlayPause="togglePlayPause"
-        @seekBackward="seekBackward"
-        @seekForward="seekForward"
-      />
+      <Share class="share absolute right-20" :songName="song.name" />
+      <Like class="like absolute right-5" :songName="song.name" />
     </div>
   </div>
+
+  <KeyboardEventListener
+    :gameAndSongName="song.name"
+    :gameName="song.gameName"
+    @play="play"
+    @pause="pause"
+    @previous="playPreviousSong"
+    @next="playNextSong"
+    @togglePlayPause="togglePlayPause"
+    @seekBackward="seekBackward"
+    @seekForward="seekForward"
+  />
 </template>
 
-<style lang="scss">
-html {
-  font-size: 16px;
-  height: 100%;
+<style>
+.desktop-player-wrapper {
+  background-color: #c2f5e9c0;
 }
 
-body {
-  font-family: "Roboto", Arial, Verdana, sans-serif;
-  background: #e4f2fb;
-  height: 100%;
+.player {
+  left: calc(50vw - 88px - 1.25rem);
+  bottom: calc((76px - 56px) / 2 + 0.5rem);
 }
 
-.player__container {
-  margin-right: auto;
-  margin-left: auto;
-  text-align: center;
-  align-items: center;
-  background: #fff;
-  border-radius: 4px;
-  box-shadow:
-    0 10px 20px -5px rgba(0, 0, 0, 0.19),
-    0 6px 6px -10px rgba(0, 0, 0, 0.23);
-
-  @media screen and (min-width: 780px) {
-    width: 780px;
+.progress-bar {
+  max-width: 90%;
+  @media (min-width: 768px) {
+    left: calc(50vw + 88px);
+    bottom: calc((76px - 24px) / 2 + 0.5rem);
+    max-width: calc(50vw - 88px - 200px);
   }
 }
 
-.wrapper {
-  width: 100%;
-  height: 50vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+.small-jacket {
+  width: 35%;
+  margin-right: 2%;
 }
 
-.mario_image {
-  max-height: 100%;
-  height: 200px;
-}
-
-img {
-  height: 100%;
-}
-
-.list {
-  display: flex;
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-}
-
-.body__info {
-  padding-bottom: 1em;
-}
-
-.info__song {
-  font-size: 1.5rem;
-  color: #d30320;
-}
-
-li {
-  cursor: pointer;
+.like,
+.share {
+  bottom: calc((76px - 52px) / 2 + 0.5rem);
 }
 </style>

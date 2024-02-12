@@ -1,33 +1,34 @@
 <script setup>
-    const props = defineProps(['isPaused', 'songName'])
-    const emit = defineEmits(['play', 'pause', 'next', 'previous'])
+const props = defineProps(["isPaused"]);
+const emit = defineEmits(["togglePlayPause", "next", "previous"]);
 </script>
 
 <template>
-    <div class="player">
-        <p>{{props.songName}}</p>
-        <ul class="list list--buttons">
-            <li @click="emit('previous')"><img src="../assets/previousIcon.png" /></li>
-
-            <li v-show="props.isPaused" @click="emit('play')"><img src="../assets/playIcon.png" /></li>
-            <li v-show="!props.isPaused" @click="emit('pause')"><img src="../assets/pauseIcon.png" /></li>
-
-            <li @click="emit('next')"><img src="../assets/nextIcon.png" /></li>
-        </ul>
-    </div>
+  <ul class="w-44 flex items-center justify-between mx-auto">
+    <li class="cursor-pointer" @click="emit('previous')">
+      <img width="30" height="30" src="../assets/icons/back.png" />
+    </li>
+    <li class="cursor-pointer" @click="emit('togglePlayPause')">
+      <img
+        v-show="props.isPaused"
+        width="56"
+        height="56"
+        src="../assets/icons/play.png"
+      />
+      <img
+        v-show="!props.isPaused"
+        width="56"
+        height="56"
+        src="../assets/icons/pause.png"
+      />
+    </li>
+    <li class="cursor-pointer" @click="emit('next')">
+      <img
+        class="rotate-180"
+        width="30"
+        height="30"
+        src="../assets/icons/back.png"
+      />
+    </li>
+  </ul>
 </template>
-
-<style scoped>
-.player {
-    border-radius: 8px;
-}
-.list--buttons {
-    align-items: center;
-    justify-content: center;
-}
-
-.list--buttons li:nth-of-type(n+1) {
-    margin-left: 1.5rem;
-}
-
-</style>
