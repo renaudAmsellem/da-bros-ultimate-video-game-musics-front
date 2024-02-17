@@ -1,16 +1,27 @@
 import { ref, onMounted, onUnmounted } from "vue";
 
+const headerHeight = 68;
+const mobileFooterHeight = 150;
+const desktopFooterHeight = 150;
+
 export const useWindowResize = () => {
   const width = ref(window.innerWidth);
-  const height = ref(window.innerHeight);
+  const mobileHeight = ref(
+    window.innerHeight - headerHeight - mobileFooterHeight
+  );
+  const desktopHeight = ref(
+    window.innerHeight - headerHeight - desktopFooterHeight
+  );
 
   function handler() {
     width.value = window.innerWidth;
-    height.value = window.innerHeight;
+    mobileHeight.value = window.innerHeight - headerHeight - mobileFooterHeight;
+    desktopHeight.value =
+      window.innerHeight - headerHeight - desktopFooterHeight;
   }
 
   onMounted(() => window.addEventListener("resize", handler));
   onUnmounted(() => window.removeEventListener("resize", handler));
 
-  return { width, height };
+  return { width, mobileHeight, desktopHeight };
 };

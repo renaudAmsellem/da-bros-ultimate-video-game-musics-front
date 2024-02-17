@@ -1,4 +1,5 @@
-export const getGameName = (song) => song.substring(0, song.indexOf(" -"));
+export const getGameName = (song) =>
+  song.indexOf(" -") > 0 ? song.substring(0, song.indexOf(" -")) : song;
 
 export const getSongName = (song) => song.substring(song.indexOf("- ") + 2);
 

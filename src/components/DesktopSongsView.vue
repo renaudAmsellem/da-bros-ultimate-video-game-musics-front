@@ -9,12 +9,15 @@ const props = defineProps(["songs", "currentIndex"]);
 const emit = defineEmits(["selectSong"]);
 
 const headerAndFooterSize = 200;
-const { width, height } = useWindowResize();
+const { width, desktopHeight } = useWindowResize();
 
+// One jacket = 264 width & 352 height
 const jacketByLines = computed(() => Math.floor(width.value / 300));
-const jacketLinesCount = computed(() => Math.floor((height.value - 200) / 300));
+// const jacketLinesCount = computed(() =>
+//   Math.floor((desktopHeight.value - 200) / 300)
+// );
 
-const withSmallJackets = computed(() => (height.value - 200) % 300 < 50);
+const jacketLinesCount = 3;
 
 const songsByX = computed(() => {
   const result = [];
@@ -39,7 +42,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
 </script>
 
 <template>
-  <div>
+  <div class="mx-5">
     <div class="flex mx-auto justify-around mb-5">
       <div v-for="(song, index) in songsByX[currentIndexSongByX]" :key="song">
         <SongView
@@ -60,7 +63,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
         class="flex mx-auto justify-around"
       >
         <div
-          v-for="(song, index) in songsByX[currentIndexSongByX + 1]"
+          v-for="(song, index) in songsByX[currentIndexSongByX + 1 + line]"
           :key="song"
         >
           <SongView

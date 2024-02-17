@@ -6,6 +6,7 @@ import SwiperControl from "./SwiperControl.vue";
 import { getGameName, getSongName, getCoverLink } from "../helpers/parseSong";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Virtual, EffectCoverflow } from "swiper/modules";
+import { useWindowResize } from "../composables/useWindowResize";
 import "swiper/css";
 
 const props = defineProps(["songs", "currentIndex"]);
@@ -21,6 +22,15 @@ const onSlideChange = ({ swipeDirection }) => {
 };
 
 const indexChange = ({ activeIndex }) => (swiperIndex.value = activeIndex);
+
+const { mobileHeight } = useWindowResize();
+const width = computed(() => {
+  return mobileHeight.value * (264 / 352);
+});
+const margins = computed(() => {
+  if (mobileHeight < 400) return 0;
+  return (mobileHeight.value - 400) / 2;
+});
 </script>
 
 <template>
@@ -32,7 +42,7 @@ const indexChange = ({ activeIndex }) => (swiperIndex.value = activeIndex);
       :effect="'coverflow'"
       :centeredSlides="true"
       :slidesPerView="2"
-      :space-between="0"
+      :space-between="-margins"
       :coverflowEffect="{
         rotate: 50,
         stretch: 0,
@@ -55,14 +65,13 @@ const indexChange = ({ activeIndex }) => (swiperIndex.value = activeIndex);
           :isActive="isActive"
           :gameName="getGameName(item)"
           :songName="isActive ? getSongName(item) : ''"
+          :style="{
+            width: width,
+            marginTop: margins + 'px',
+            marginBottom: margins + 'px',
+          }"
         />
       </SwiperSlide>
     </Swiper>
   </div>
 </template>
-
-<style scoped>
-.current-song {
-  max-width: min(100%, 264px);
-}
-</style>

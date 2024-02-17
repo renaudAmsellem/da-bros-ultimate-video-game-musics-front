@@ -4,7 +4,7 @@ const props = defineProps(["jacket", "zoomIn"]);
 
 <template>
   <img
-    class="rounded-xl overflow-visible"
+    class="rounded-xl"
     :src="jacket"
     :class="zoomIn && 'jacket-zoom-in'"
     width="264"
