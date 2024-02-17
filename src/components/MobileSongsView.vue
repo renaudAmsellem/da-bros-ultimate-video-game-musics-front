@@ -27,7 +27,7 @@ const { mobileHeight } = useWindowResize();
 const width = computed(() => {
   return mobileHeight.value * (264 / 352);
 });
-const margins = computed(() => {
+const xPadding = computed(() => {
   if (mobileHeight < 400) return 0;
   return (mobileHeight.value - 400) / 2;
 });
@@ -67,8 +67,7 @@ const margins = computed(() => {
           :songName="isActive ? getSongName(item) : ''"
           :style="{
             width: width,
-            marginTop: margins + 'px',
-            marginBottom: margins + 'px',
+            paddingTop: xPadding + 'px',
           }"
         />
       </SwiperSlide>

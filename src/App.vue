@@ -166,9 +166,8 @@ const { width } = useWindowResize();
     </div>
   </MobileLayout>
 
-  <div v-else class="h-full my-auto">
+  <div v-else>
     <DesktopSongsView
-      class="h-full my-auto"
       :songs="songs"
       :currentIndex="indexSong"
       @selectSong="selectSong"

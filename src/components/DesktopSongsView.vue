@@ -11,13 +11,31 @@ const emit = defineEmits(["selectSong"]);
 const headerAndFooterSize = 200;
 const { width, desktopHeight } = useWindowResize();
 
-// One jacket = 264 width & 352 height
-const jacketByLines = computed(() => Math.floor(width.value / 300));
-// const jacketLinesCount = computed(() =>
-//   Math.floor((desktopHeight.value - 200) / 300)
-// );
+const smallJacketWidth = 220;
+const jacketWidth = 300;
+const smallJacketHeight = 300;
+const jacketHeight = 400;
 
-const jacketLinesCount = 3;
+// One jacket = 264 width & 352 height
+// 641 height = 2 jackets
+const withSmallJackets = computed(
+  () => desktopHeight.value % smallJacketHeight < 100
+);
+const jacketLinesCount = computed(() =>
+  Math.floor(desktopHeight.value / smallJacketHeight)
+);
+const jacketByLines = computed(() =>
+  withSmallJackets.value
+    ? Math.floor(width.value / smallJacketWidth)
+    : Math.floor(width.value / jacketWidth)
+);
+const xPadding = computed(
+  () =>
+    (desktopHeight.value -
+      jacketLinesCount.value *
+        (withSmallJackets.value ? smallJacketHeight : jacketHeight)) /
+    2
+);
 
 const songsByX = computed(() => {
   const result = [];
@@ -42,7 +60,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
 </script>
 
 <template>
-  <div class="mx-5">
+  <div class="mx-5" :style="{ paddingTop: xPadding + 'px' }">
     <div class="flex mx-auto justify-around mb-5">
       <div v-for="(song, index) in songsByX[currentIndexSongByX]" :key="song">
         <SongView
@@ -60,7 +78,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
     <div v-if="currentIndexSongByX + 1 < songsByX.length">
       <div
         v-for="line in jacketLinesCount - 1"
-        class="flex mx-auto justify-around"
+        class="flex mx-auto justify-around mb-5"
       >
         <div
           v-for="(song, index) in songsByX[currentIndexSongByX + 1 + line]"
