@@ -136,7 +136,7 @@ const { width } = useWindowResize();
 </script>
 
 <template>
-  <h1 class="text-center text-xl font-bold my-5">oidaЯ Rabio</h1>
+  <h1 class="text-center text-xl font-bold py-5">oidaЯ Rabio</h1>
 
   <MobileLayout v-if="width < 768">
     <MobileSongsView
@@ -166,7 +166,7 @@ const { width } = useWindowResize();
     </div>
   </MobileLayout>
 
-  <div v-else>
+  <main v-else>
     <DesktopSongsView
       :songs="songs"
       :currentIndex="indexSong"
@@ -197,7 +197,7 @@ const { width } = useWindowResize();
       <Share class="share absolute right-20" :songName="song.name" />
       <Like class="like absolute right-5" :songName="song.name" />
     </div>
-  </div>
+  </main>
 
   <KeyboardEventListener
     :gameAndSongName="song.name"

@@ -9,7 +9,7 @@ const jacket = computed(() => getCoverLink(props.gameName));
 </script>
 
 <template>
-  <div class="song-view">
+  <article class="song-view">
     <Jacket class="mb-2" :jacket="jacket" :zoomIn="isActive" />
     <p
       v-if="songName"
@@ -18,5 +18,5 @@ const jacket = computed(() => getCoverLink(props.gameName));
     >
       {{ songName }}
     </p>
-  </div>
+  </article>
 </template>

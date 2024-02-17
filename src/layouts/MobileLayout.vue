@@ -1,3 +1,3 @@
 <template>
-  <div class="mobile-layout h-full"><slot /></div>
+  <main class="mobile-layout h-full"><slot /></main>
 </template>

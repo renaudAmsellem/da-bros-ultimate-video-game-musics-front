@@ -42,7 +42,7 @@ const xPadding = computed(() => {
       :effect="'coverflow'"
       :centeredSlides="true"
       :slidesPerView="2"
-      :space-between="-margins"
+      :space-between="-xPadding"
       :coverflowEffect="{
         rotate: 50,
         stretch: 0,
