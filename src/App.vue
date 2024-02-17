@@ -139,7 +139,12 @@ const { width } = useWindowResize();
   <h1 class="text-center text-xl font-bold my-5">oidaЯ Rabio</h1>
 
   <MobileLayout v-if="width < 768">
-    <MobileSongsView :songs="songs" :currentIndex="indexSong" />
+    <MobileSongsView
+      :songs="songs"
+      :currentIndex="indexSong"
+      @next="playNextSong"
+      @previous="playPreviousSong"
+    />
 
     <div class="absolute left-0 right-0 bottom-12 h-15">
       <div class="mb-3">

@@ -1,63 +1,68 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import SongView from "./SongView.vue";
 import Jacket from "./Jacket.vue";
+import SwiperControl from "./SwiperControl.vue";
 import { getGameName, getSongName, getCoverLink } from "../helpers/parseSong";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Virtual, EffectCoverflow } from "swiper/modules";
+import "swiper/css";
 
 const props = defineProps(["songs", "currentIndex"]);
+const emit = defineEmits(["previous", "next"]);
 
-const mobileList = computed(() => {
-  const list = {
-    previous: "",
-    current: "",
-    next: "",
-  };
+const swiperIndex = ref(0);
+const modules = [Virtual, EffectCoverflow];
 
-  if (props.currentIndex !== 0)
-    list.previous = props.songs[props.currentIndex - 1];
+const onSlideChange = ({ swipeDirection }) => {
+  if (props.currentIndex === swiperIndex.value) return;
+  if (swipeDirection === "prev") return emit("previous");
+  emit("next");
+};
 
-  list.current = props.songs[props.currentIndex];
-
-  if (props.currentIndex !== props.songs.length - 1)
-    list.next = props.songs[props.currentIndex + 1];
-
-  return list;
-});
+const indexChange = ({ activeIndex }) => (swiperIndex.value = activeIndex);
 </script>
 
 <template>
   <div class="relative overflow-hidden">
-    <Jacket
-      class="previous-song absolute top-0"
-      v-if="mobileList.previous"
-      :jacket="getCoverLink(getGameName(mobileList.previous))"
-    />
-    <SongView
-      v-if="mobileList.current"
-      class="current-song mx-auto"
-      :isActive="true"
-      :songName="getSongName(mobileList.current)"
-      :gameName="getGameName(mobileList.current)"
-    />
-    <Jacket
-      class="next-song absolute top-0"
-      v-if="mobileList.next"
-      :jacket="getCoverLink(getGameName(mobileList.next))"
-    />
+    <Swiper
+      ref="input"
+      :modules="modules"
+      :virtual="true"
+      :effect="'coverflow'"
+      :centeredSlides="true"
+      :slidesPerView="2"
+      :space-between="0"
+      :coverflowEffect="{
+        rotate: 50,
+        stretch: 0,
+        depth: 100,
+        modifier: 1,
+        slideShadows: false,
+      }"
+      @slideChange="onSlideChange"
+      @activeIndexChange="indexChange"
+    >
+      <SwiperControl :currentIndex="currentIndex" :swiperIndex="swiperIndex" />
+      <SwiperSlide
+        v-for="(item, index) in songs"
+        :key="index"
+        :virtualIndex="index"
+        v-slot="{ isActive }"
+      >
+        <SongView
+          class="current-song mx-auto"
+          :isActive="isActive"
+          :gameName="getGameName(item)"
+          :songName="isActive ? getSongName(item) : ''"
+        />
+      </SwiperSlide>
+    </Swiper>
   </div>
 </template>
 
 <style scoped>
-.previous-song,
-.current-song,
-.next-song {
-  max-width: min(60%, 264px);
-}
-
-.previous-song {
-  right: min(85%, calc(50% + 132px + 22px));
-}
-.next-song {
-  left: min(85%, calc(50% + 132px + 22px));
+.current-song {
+  max-width: min(100%, 264px);
 }
 </style>

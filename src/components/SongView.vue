@@ -12,6 +12,7 @@ const jacket = computed(() => getCoverLink(props.gameName));
   <div class="song-view">
     <Jacket class="mb-4" :jacket="jacket" :zoomIn="isActive" />
     <p
+      v-if="songName"
       :class="isActive && 'font-bold'"
       class="text-center text-xl overflow-hidden text-ellipsis whitespace-nowrap"
     >
