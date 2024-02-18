@@ -81,7 +81,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
         class="flex mx-auto justify-around mb-5"
       >
         <div
-          v-for="(song, index) in songsByX[currentIndexSongByX + 1 + line]"
+          v-for="(song, index) in songsByX[currentIndexSongByX + line]"
           :key="song"
         >
           <SongView
