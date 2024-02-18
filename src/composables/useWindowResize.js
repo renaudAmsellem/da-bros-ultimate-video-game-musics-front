@@ -1,8 +1,8 @@
 import { ref, onMounted, onUnmounted } from "vue";
 
 const headerHeight = 68;
-const mobileFooterHeight = 150;
-const desktopFooterHeight = 150;
+const mobileFooterHeight = 122;
+const desktopFooterHeight = 112;
 
 export const useWindowResize = () => {
   const width = ref(window.innerWidth);
