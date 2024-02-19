@@ -1,15 +1,9 @@
 <script setup>
-const props = defineProps(["jacket", "zoomIn"]);
+const props = defineProps(["jacket"]);
 </script>
 
 <template>
-  <img
-    class="rounded-xl"
-    :src="jacket"
-    :class="zoomIn && 'jacket-zoom-in'"
-    width="264"
-    height="352"
-  />
+  <img class="rounded-xl" :src="jacket" width="264" height="352" />
 </template>
 
 <style scoped>

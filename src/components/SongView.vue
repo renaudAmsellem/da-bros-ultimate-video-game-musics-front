@@ -9,8 +9,11 @@ const jacket = computed(() => getCoverLink(props.gameName));
 </script>
 
 <template>
-  <article class="song-view">
-    <Jacket class="mb-2" :jacket="jacket" :zoomIn="isActive" />
+  <article
+    class="song-view rounded-xl"
+    :class="isActive && 'song-view__is-active'"
+  >
+    <Jacket class="mb-2" :jacket="jacket" />
     <p
       v-if="songName"
       :class="isActive && 'font-bold'"
@@ -20,3 +23,12 @@ const jacket = computed(() => getCoverLink(props.gameName));
     </p>
   </article>
 </template>
+
+<style scoped>
+.song-view {
+  padding: 10px;
+}
+.song-view__is-active {
+  background-color: #c2f5e9c0;
+}
+</style>

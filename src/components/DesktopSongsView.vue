@@ -10,7 +10,7 @@ const emit = defineEmits(["selectSong"]);
 
 const { width, desktopHeight } = useWindowResize();
 
-const smallJacketWidth = 220;
+const smallJacketWidth = 200;
 const jacketWidth = 300;
 const smallJacketHeight = 305;
 const jacketHeight = 400;
