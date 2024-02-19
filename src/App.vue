@@ -146,7 +146,7 @@ const { width } = useWindowResize();
       @previous="playPreviousSong"
     />
 
-    <div class="absolute left-0 right-0 bottom-12 h-15">
+    <div class="absolute left-0 right-0 bottom-5 h-15">
       <div class="mb-3">
         <ProgressBar
           class="progress-bar"

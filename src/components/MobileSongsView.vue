@@ -27,7 +27,7 @@ const { mobileHeight } = useWindowResize();
 const width = computed(() => {
   return mobileHeight.value * (264 / 352);
 });
-const xPadding = computed(() => {
+const yPadding = computed(() => {
   if (mobileHeight < 400) return 0;
   return (mobileHeight.value - 400) / 2;
 });
@@ -42,7 +42,7 @@ const xPadding = computed(() => {
       :effect="'coverflow'"
       :centeredSlides="true"
       :slidesPerView="2"
-      :space-between="-xPadding"
+      :space-between="-yPadding"
       :coverflowEffect="{
         rotate: 50,
         stretch: 0,
@@ -67,7 +67,7 @@ const xPadding = computed(() => {
           :songName="isActive ? getSongName(item) : ''"
           :style="{
             width: width,
-            paddingTop: xPadding + 'px',
+            paddingTop: yPadding + 'px',
           }"
         />
       </SwiperSlide>

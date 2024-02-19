@@ -1,6 +1,6 @@
 import { ref, onMounted, onUnmounted } from "vue";
 
-const headerHeight = 68;
+const headerHeight = 48;
 const mobileFooterHeight = 122;
 const desktopFooterHeight = 112;
 

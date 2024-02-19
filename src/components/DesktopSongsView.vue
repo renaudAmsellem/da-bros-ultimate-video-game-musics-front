@@ -8,12 +8,11 @@ import { useWindowResize } from "../composables/useWindowResize";
 const props = defineProps(["songs", "currentIndex"]);
 const emit = defineEmits(["selectSong"]);
 
-const headerAndFooterSize = 200;
 const { width, desktopHeight } = useWindowResize();
 
 const smallJacketWidth = 220;
 const jacketWidth = 300;
-const smallJacketHeight = 300;
+const smallJacketHeight = 305;
 const jacketHeight = 400;
 
 // One jacket = 264 width & 352 height
@@ -29,12 +28,13 @@ const jacketByLines = computed(() =>
     ? Math.floor(width.value / smallJacketWidth)
     : Math.floor(width.value / jacketWidth)
 );
-const xPadding = computed(
+const yPadding = computed(
   () =>
     (desktopHeight.value -
       jacketLinesCount.value *
         (withSmallJackets.value ? smallJacketHeight : jacketHeight)) /
-    2
+      2 -
+    20
 );
 
 const songsByX = computed(() => {
@@ -60,7 +60,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
 </script>
 
 <template>
-  <div class="mx-5" :style="{ paddingTop: xPadding + 'px' }">
+  <div class="mx-5" :style="{ paddingTop: yPadding + 'px' }">
     <div class="flex mx-auto justify-around mb-5">
       <div v-for="(song, index) in songsByX[currentIndexSongByX]" :key="song">
         <SongView
@@ -92,7 +92,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
             @click="
               emit(
                 'selectSong',
-                index + (currentIndexSongByX + 1) * jacketByLines
+                index + (currentIndexSongByX + line) * jacketByLines
               )
             "
           />
