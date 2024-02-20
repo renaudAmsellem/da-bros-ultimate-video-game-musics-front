@@ -45,7 +45,7 @@ const yPadding = computed(() => {
     />
     <SongView
       v-if="mobileList.current"
-      class="current-song mx-auto p-0"
+      class="current-song mx-auto"
       :songName="getSongName(mobileList.current)"
       :gameName="getGameName(mobileList.current)"
     />

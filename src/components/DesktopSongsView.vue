@@ -71,7 +71,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
     <div class="flex mx-auto justify-around mb-5">
       <div v-for="(song, index) in songsByX[currentIndexSongByX]" :key="song">
         <SongView
-          class="cursor-pointer"
+          class="cursor-pointer p-3"
           :class="withBigJackets ? '' : 'max-w-48'"
           :songName="getSongName(song)"
           :gameName="getGameName(song)"
@@ -92,7 +92,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
           :key="song"
         >
           <SongView
-            class="cursor-pointer"
+            class="cursor-pointer p-3"
             :class="withBigJackets ? '' : 'max-w-48'"
             :songName="getSongName(song)"
             :gameName="getGameName(song)"

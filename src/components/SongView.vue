@@ -10,7 +10,7 @@ const jacket = computed(() => getCoverLink(props.gameName));
 
 <template>
   <article
-    class="song-view rounded-xl p-3"
+    class="song-view rounded-xl"
     :class="isActive && 'song-view__is-active'"
   >
     <Jacket class="mb-2" :jacket="jacket" />
