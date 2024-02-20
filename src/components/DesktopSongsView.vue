@@ -17,22 +17,29 @@ const jacketHeight = 400;
 
 // One jacket = 264 width & 352 height
 // 641 height = 2 jackets
-const withSmallJackets = computed(
-  () => desktopHeight.value % smallJacketHeight < 100
+const smallJacketsOnScreen = computed(() =>
+  Math.floor(desktopHeight.value / smallJacketHeight)
+);
+const jacketsOnScreen = computed(() =>
+  Math.floor(desktopHeight.value / jacketHeight)
+);
+const withBigJackets = computed(
+  () =>
+    Math.trunc(smallJacketsOnScreen.value) === Math.trunc(jacketsOnScreen.value)
 );
 const jacketLinesCount = computed(() =>
   Math.floor(desktopHeight.value / smallJacketHeight)
 );
 const jacketByLines = computed(() =>
-  withSmallJackets.value
-    ? Math.floor(width.value / smallJacketWidth)
-    : Math.floor(width.value / jacketWidth)
+  withBigJackets.value
+    ? Math.floor(width.value / jacketWidth)
+    : Math.floor(width.value / smallJacketWidth)
 );
 const yPadding = computed(
   () =>
     (desktopHeight.value -
       jacketLinesCount.value *
-        (withSmallJackets.value ? smallJacketHeight : jacketHeight)) /
+        (withBigJackets.value ? jacketHeight : smallJacketHeight)) /
       2 -
     20
 );
@@ -65,7 +72,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
       <div v-for="(song, index) in songsByX[currentIndexSongByX]" :key="song">
         <SongView
           class="cursor-pointer"
-          :class="withSmallJackets && 'max-w-48'"
+          :class="withBigJackets ? '' : 'max-w-48'"
           :songName="getSongName(song)"
           :gameName="getGameName(song)"
           :isActive="isActive === index"
@@ -86,7 +93,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
         >
           <SongView
             class="cursor-pointer"
-            :class="withSmallJackets && 'max-w-48'"
+            :class="withBigJackets ? '' : 'max-w-48'"
             :songName="getSongName(song)"
             :gameName="getGameName(song)"
             @click="

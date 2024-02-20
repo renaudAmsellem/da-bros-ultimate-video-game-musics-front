@@ -2,75 +2,73 @@
 import { computed, ref, watch } from "vue";
 import SongView from "./SongView.vue";
 import Jacket from "./Jacket.vue";
-import SwiperControl from "./SwiperControl.vue";
 import { getGameName, getSongName, getCoverLink } from "../helpers/parseSong";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import { Virtual, EffectCoverflow } from "swiper/modules";
 import { useWindowResize } from "../composables/useWindowResize";
-import "swiper/css";
 
 const props = defineProps(["songs", "currentIndex"]);
 const emit = defineEmits(["previous", "next"]);
 
-const swiperIndex = ref(0);
-const modules = [Virtual, EffectCoverflow];
+const mobileList = computed(() => {
+  const list = {
+    previous: "",
+    current: "",
+    next: "",
+  };
 
-const onSlideChange = ({ swipeDirection }) => {
-  if (props.currentIndex === swiperIndex.value) return;
-  if (swipeDirection === "prev") return emit("previous");
-  emit("next");
-};
+  if (props.currentIndex !== 0)
+    list.previous = props.songs[props.currentIndex - 1];
+  list.current = props.songs[props.currentIndex];
 
-const indexChange = ({ activeIndex }) => (swiperIndex.value = activeIndex);
+  if (props.currentIndex !== props.songs.length - 1)
+    list.next = props.songs[props.currentIndex + 1];
+
+  return list;
+});
 
 const { mobileHeight } = useWindowResize();
 const width = computed(() => {
   return mobileHeight.value * (264 / 352);
 });
 const yPadding = computed(() => {
-  if (mobileHeight < 400) return 0;
+  if (mobileHeight.value < 400) return 0;
   return (mobileHeight.value - 400) / 2;
 });
 </script>
 
 <template>
-  <div class="relative overflow-hidden">
-    <Swiper
-      ref="input"
-      :modules="modules"
-      :virtual="true"
-      :effect="'coverflow'"
-      :centeredSlides="true"
-      :slidesPerView="2"
-      :space-between="-yPadding"
-      :coverflowEffect="{
-        rotate: 50,
-        stretch: 0,
-        depth: 100,
-        modifier: 1,
-        slideShadows: false,
-      }"
-      @slideChange="onSlideChange"
-      @activeIndexChange="indexChange"
-    >
-      <SwiperControl :currentIndex="currentIndex" :swiperIndex="swiperIndex" />
-      <SwiperSlide
-        v-for="(item, index) in songs"
-        :key="index"
-        :virtualIndex="index"
-        v-slot="{ isActive }"
-      >
-        <SongView
-          class="current-song mx-auto"
-          :isActive="isActive"
-          :gameName="getGameName(item)"
-          :songName="isActive ? getSongName(item) : ''"
-          :style="{
-            width: width,
-            paddingTop: yPadding + 'px',
-          }"
-        />
-      </SwiperSlide>
-    </Swiper>
+  <div class="relative overflow-hidden" :style="{ marginTop: yPadding + 'px' }">
+    <Jacket
+      class="previous-song absolute top-0"
+      v-if="mobileList.previous"
+      :jacket="getCoverLink(getGameName(mobileList.previous))"
+      @click="emit('previous')"
+    />
+    <SongView
+      v-if="mobileList.current"
+      class="current-song mx-auto p-0"
+      :songName="getSongName(mobileList.current)"
+      :gameName="getGameName(mobileList.current)"
+    />
+    <Jacket
+      class="next-song absolute top-0"
+      v-if="mobileList.next"
+      :jacket="getCoverLink(getGameName(mobileList.next))"
+      @click="emit('next')"
+    />
   </div>
 </template>
+
+<style scoped>
+.previous-song,
+.current-song,
+.next-song {
+  max-width: min(60%, 264px);
+}
+
+.previous-song {
+  right: min(85%, calc(50% + 132px + 22px));
+}
+.next-song {
+  left: min(85%, calc(50% + 132px + 22px));
+}
+</style>

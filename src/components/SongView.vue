@@ -10,7 +10,7 @@ const jacket = computed(() => getCoverLink(props.gameName));
 
 <template>
   <article
-    class="song-view rounded-xl"
+    class="song-view rounded-xl p-3"
     :class="isActive && 'song-view__is-active'"
   >
     <Jacket class="mb-2" :jacket="jacket" />
@@ -25,9 +25,6 @@ const jacket = computed(() => getCoverLink(props.gameName));
 </template>
 
 <style scoped>
-.song-view {
-  padding: 10px;
-}
 .song-view__is-active {
   background-color: #c2f5e9c0;
 }
