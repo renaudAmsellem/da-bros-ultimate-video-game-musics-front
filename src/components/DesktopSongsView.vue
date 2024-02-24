@@ -10,38 +10,31 @@ const emit = defineEmits(["selectSong"]);
 
 const { width, desktopHeight } = useWindowResize();
 
-const smallJacketWidth = 200;
-const jacketWidth = 300;
-const smallJacketHeight = 305;
-const jacketHeight = 400;
+// with w-48 class:
+const jacketWidth = 192;
+const jacketHeight = 284;
+const yMarginBetweenJackets = 16;
+const headerMarginWithContent = 20;
 
-// One jacket = 264 width & 352 height
-// 641 height = 2 jackets
-const smallJacketsOnScreen = computed(() =>
-  Math.floor(desktopHeight.value / smallJacketHeight)
-);
-const jacketsOnScreen = computed(() =>
-  Math.floor(desktopHeight.value / jacketHeight)
-);
-const withBigJackets = computed(
-  () =>
-    Math.trunc(smallJacketsOnScreen.value) === Math.trunc(jacketsOnScreen.value)
-);
-const jacketLinesCount = computed(() =>
-  Math.floor(desktopHeight.value / smallJacketHeight)
-);
-const jacketByLines = computed(() =>
-  withBigJackets.value
-    ? Math.floor(width.value / jacketWidth)
-    : Math.floor(width.value / smallJacketWidth)
-);
-const yPadding = computed(
-  () =>
-    (desktopHeight.value -
-      jacketLinesCount.value *
-        (withBigJackets.value ? jacketHeight : smallJacketHeight)) /
-      2 -
-    20
+const jacketLinesCount = computed(() => {
+  let result = -1;
+  let totalHeight = desktopHeight.value;
+  do {
+    if (result > 0) totalHeight -= yMarginBetweenJackets;
+    totalHeight -= jacketHeight;
+    result += 1;
+  } while (totalHeight > 0);
+
+  return result;
+});
+
+const jacketByLines = computed(() => Math.floor(width.value / jacketWidth));
+const yPadding = computed(() =>
+  Math.max(
+    0,
+    (desktopHeight.value - jacketLinesCount.value * jacketHeight) / 2 -
+      headerMarginWithContent
+  )
 );
 
 const songsByX = computed(() => {
@@ -68,11 +61,10 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
 
 <template>
   <div class="mx-5" :style="{ paddingTop: yPadding + 'px' }">
-    <div class="flex mx-auto justify-around mb-5">
+    <div class="flex mx-auto justify-around mb-4">
       <div v-for="(song, index) in songsByX[currentIndexSongByX]" :key="song">
         <SongView
-          class="cursor-pointer p-3"
-          :class="withBigJackets ? '' : 'max-w-48'"
+          class="cursor-pointer max-w-48 p-3"
           :songName="getSongName(song)"
           :gameName="getGameName(song)"
           :isActive="isActive === index"
@@ -92,8 +84,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
           :key="song"
         >
           <SongView
-            class="cursor-pointer p-3"
-            :class="withBigJackets ? '' : 'max-w-48'"
+            class="cursor-pointer max-w-48 p-3"
             :songName="getSongName(song)"
             :gameName="getGameName(song)"
             @click="
