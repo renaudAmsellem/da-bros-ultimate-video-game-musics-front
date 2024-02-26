@@ -1,9 +1,15 @@
 <script setup>
-const props = defineProps(["jacket"]);
+defineProps(["jacket"]);
 </script>
 
 <template>
-  <img class="rounded-xl" :src="jacket" width="264" height="352" />
+  <img
+    class="rounded-xl"
+    :src="jacket"
+    alt="Jaquette"
+    width="264"
+    height="352"
+  />
 </template>
 
 <style scoped>

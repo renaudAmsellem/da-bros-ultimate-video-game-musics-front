@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed } from "vue";
 import SongView from "./SongView.vue";
 import Jacket from "./Jacket.vue";
 import { getGameName, getSongName, getCoverLink } from "../helpers/parseSong";
@@ -26,9 +26,6 @@ const mobileList = computed(() => {
 });
 
 const { mobileHeight } = useWindowResize();
-const width = computed(() => {
-  return mobileHeight.value * (264 / 352);
-});
 const yPadding = computed(() => {
   if (mobileHeight.value < 400) return 0;
   return (mobileHeight.value - 400) / 2;
@@ -38,20 +35,20 @@ const yPadding = computed(() => {
 <template>
   <div class="relative overflow-hidden" :style="{ marginTop: yPadding + 'px' }">
     <Jacket
-      class="previous-song absolute top-0"
       v-if="mobileList.previous"
+      class="previous-song absolute top-0"
       :jacket="getCoverLink(getGameName(mobileList.previous))"
       @click="emit('previous')"
     />
     <SongView
       v-if="mobileList.current"
       class="current-song mx-auto"
-      :songName="getSongName(mobileList.current)"
-      :gameName="getGameName(mobileList.current)"
+      :song-name="getSongName(mobileList.current)"
+      :game-name="getGameName(mobileList.current)"
     />
     <Jacket
-      class="next-song absolute top-0"
       v-if="mobileList.next"
+      class="next-song absolute top-0"
       :jacket="getCoverLink(getGameName(mobileList.next))"
       @click="emit('next')"
     />
@@ -62,7 +59,7 @@ const yPadding = computed(() => {
 .previous-song,
 .current-song,
 .next-song {
-  max-width: min(60%, 264px);
+  max-width: min(50%, 264px);
 }
 
 .previous-song {

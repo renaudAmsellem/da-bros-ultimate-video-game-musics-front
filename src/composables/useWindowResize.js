@@ -9,6 +9,7 @@ export const useWindowResize = () => {
   const mobileHeight = ref(
     window.innerHeight - headerHeight - mobileFooterHeight
   );
+
   const desktopHeight = ref(
     window.innerHeight - headerHeight - desktopFooterHeight
   );

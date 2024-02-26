@@ -1,17 +1,22 @@
 <script setup>
-import { watch, computed } from "vue";
+import { computed } from "vue";
 import Jacket from "./Jacket.vue";
 import { getCoverLink } from "../helpers/parseSong";
 
 const props = defineProps(["songName", "gameName", "isActive"]);
+const emit = defineEmits(["selectSong"]);
 
 const jacket = computed(() => getCoverLink(props.gameName));
 </script>
 
 <template>
-  <article
+  <div
+    role="button"
+    tabindex="0"
     class="song-view rounded-xl"
     :class="isActive && 'song-view__is-active'"
+    @click="emit('selectSong')"
+    @keypress="emit('selectSong')"
   >
     <Jacket class="mb-2" :jacket="jacket" />
     <p
@@ -21,7 +26,7 @@ const jacket = computed(() => getCoverLink(props.gameName));
     >
       {{ songName }}
     </p>
-  </article>
+  </div>
 </template>
 
 <style scoped>

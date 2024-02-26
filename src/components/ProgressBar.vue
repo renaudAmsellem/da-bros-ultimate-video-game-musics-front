@@ -1,5 +1,5 @@
 <script setup>
-import { watch, computed } from "vue";
+import { computed } from "vue";
 import Progress from "./Progress.vue";
 
 const props = defineProps(["progress", "duration"]);
@@ -29,6 +29,7 @@ const formattedDuration = computed(() => getFormattedTime(props.duration));
       <Progress
         :progress="progress"
         :duration="duration"
+        aria-label="Barre de chargement"
         @seek="(data) => emit('seek', data)"
       />
     </div>

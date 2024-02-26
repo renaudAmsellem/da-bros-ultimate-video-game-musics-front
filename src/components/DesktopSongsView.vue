@@ -1,8 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import SongView from "./SongView.vue";
-import Jacket from "./Jacket.vue";
-import { getGameName, getSongName, getCoverLink } from "../helpers/parseSong";
+import { getGameName, getSongName } from "../helpers/parseSong";
 import { useWindowResize } from "../composables/useWindowResize";
 
 const props = defineProps(["songs", "currentIndex"]);
@@ -65,10 +64,10 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
       <div v-for="(song, index) in songsByX[currentIndexSongByX]" :key="song">
         <SongView
           class="cursor-pointer max-w-48 p-3"
-          :songName="getSongName(song)"
-          :gameName="getGameName(song)"
-          :isActive="isActive === index"
-          @click="
+          :song-name="getSongName(song)"
+          :game-name="getGameName(song)"
+          :is-active="isActive === index"
+          @select-song="
             emit('selectSong', index + currentIndexSongByX * jacketByLines)
           "
         />
@@ -77,6 +76,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
     <div v-if="currentIndexSongByX + 1 < songsByX.length">
       <div
         v-for="line in jacketLinesCount - 1"
+        :key="line"
         class="flex mx-auto justify-around mb-5"
       >
         <div
@@ -85,9 +85,9 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
         >
           <SongView
             class="cursor-pointer max-w-48 p-3"
-            :songName="getSongName(song)"
-            :gameName="getGameName(song)"
-            @click="
+            :song-name="getSongName(song)"
+            :game-name="getGameName(song)"
+            @select-song="
               emit(
                 'selectSong',
                 index + (currentIndexSongByX + line) * jacketByLines

@@ -1,5 +1,5 @@
 <script setup>
-import { watch, computed } from "vue";
+import { watch } from "vue";
 
 const props = defineProps(["progress", "duration"]);
 const emit = defineEmits(["seek"]);

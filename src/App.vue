@@ -1,5 +1,5 @@
 <script setup lang="js">
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import MobileLayout from "./layouts/MobileLayout.vue";
 import Like from "./components/Like.vue";
 import Share from "./components/Share.vue";
@@ -141,7 +141,7 @@ const { width } = useWindowResize();
   <MobileLayout v-if="width < 768">
     <MobileSongsView
       :songs="songs"
-      :currentIndex="indexSong"
+      :current-index="indexSong"
       @next="playNextSong"
       @previous="playPreviousSong"
     />
@@ -156,21 +156,21 @@ const { width } = useWindowResize();
         />
       </div>
       <Player
-        :isPaused="songState.paused"
-        @togglePlayPause="togglePlayPause"
+        :is-paused="songState.paused"
+        @toggle-play-pause="togglePlayPause"
         @next="playNextSong"
         @previous="playPreviousSong"
       />
-      <Share class="absolute left-3 bottom-1" :songName="song.name" />
-      <Like class="absolute right-3 bottom-1" :songName="song.name" />
+      <Share class="absolute left-3 bottom-1" :song-name="song.name" />
+      <Like class="absolute right-3 bottom-1" :song-name="song.name" />
     </div>
   </MobileLayout>
 
   <main v-else>
     <DesktopSongsView
       :songs="songs"
-      :currentIndex="indexSong"
-      @selectSong="selectSong"
+      :current-index="indexSong"
+      @select-song="selectSong"
     />
 
     <div
@@ -178,13 +178,13 @@ const { width } = useWindowResize();
     >
       <SmallJacket
         class="small-jacket"
-        :songName="song.songName"
-        :gameName="song.gameName"
+        :song-name="song.songName"
+        :game-name="song.gameName"
       />
       <Player
         class="player absolute"
-        :isPaused="songState.paused"
-        @togglePlayPause="togglePlayPause"
+        :is-paused="songState.paused"
+        @toggle-play-pause="togglePlayPause"
         @next="playNextSong"
         @previous="playPreviousSong"
       />
@@ -194,21 +194,21 @@ const { width } = useWindowResize();
         :duration="song.duration"
         @seek="seek"
       />
-      <Share class="share absolute right-20" :songName="song.name" />
-      <Like class="like absolute right-5" :songName="song.name" />
+      <Share class="share absolute right-20" :song-name="song.name" />
+      <Like class="like absolute right-5" :song-name="song.name" />
     </div>
   </main>
 
   <KeyboardEventListener
-    :gameAndSongName="song.name"
-    :gameName="song.gameName"
+    :game-and-song-name="song.name"
+    :game-name="song.gameName"
     @play="play"
     @pause="pause"
     @previous="playPreviousSong"
     @next="playNextSong"
-    @togglePlayPause="togglePlayPause"
-    @seekBackward="seekBackward"
-    @seekForward="seekForward"
+    @toggle-play-pause="togglePlayPause"
+    @seek-backward="seekBackward"
+    @seek-forward="seekForward"
   />
 </template>
 

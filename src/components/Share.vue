@@ -1,11 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
-
-const localStorageKey = "hearts";
-
-const props = defineProps(["songName"]);
-
-const share = () => {};
+defineProps(["songName"]);
 </script>
 
 <template>
@@ -14,6 +8,11 @@ const share = () => {};
     target="_blank"
     :href="'/' + songName + '.webm'"
   >
-    <img width="28" height="28" src="../assets/icons/share.png" />
+    <img
+      width="28"
+      height="28"
+      alt="Ouvrir le lien de la chanson dans un nouvel onglet"
+      src="../assets/icons/share.png"
+    />
   </a>
 </template>

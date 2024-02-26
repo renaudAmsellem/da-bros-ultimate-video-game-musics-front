@@ -56,4 +56,4 @@ document.body.onkeydown = function (e) {
 };
 </script>
 
-<template></template>
+<template><div /></template>
