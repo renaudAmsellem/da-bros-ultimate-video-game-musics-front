@@ -26,7 +26,14 @@ const seek = (event) => {
 </script>
 
 <template>
-  <progress id="progress-bar" class="w-full" value="0" max="1" @click="seek" />
+  <progress
+    id="progress-bar"
+    class="w-full"
+    value="0"
+    max="1"
+    aria-label="Barre de chargement"
+    @click="seek"
+  />
 </template>
 
 <style scoped lang="scss">

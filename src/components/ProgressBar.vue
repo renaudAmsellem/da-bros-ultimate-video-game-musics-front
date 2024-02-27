@@ -26,10 +26,10 @@ const formattedDuration = computed(() => getFormattedTime(props.duration));
       <span class="hidden md:block whitespace-nowrap mr-4"
         >{{ formattedTime }} / {{ formattedDuration }}</span
       >
+      <!-- eslint-disable-next-line vuejs-accessibility/form-control-has-label -->
       <Progress
         :progress="progress"
         :duration="duration"
-        aria-label="Barre de chargement"
         @seek="(data) => emit('seek', data)"
       />
     </div>
