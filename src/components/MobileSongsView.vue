@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import SongView from "./SongView.vue";
 import Jacket from "./Jacket.vue";
 import { getGameName, getSongName, getCoverLink } from "../helpers/parseSong";
@@ -30,6 +30,15 @@ const yPadding = computed(() => {
   if (mobileHeight.value < 400) return 0;
   return (mobileHeight.value - 400) / 2;
 });
+
+watch(
+  () => props.currentIndex,
+  (newIndex) => {
+    const preloadNextImage = new Image();
+    preloadNextImage.src = getSongName(props.songs[newIndex + 2]);
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -52,6 +61,7 @@ const yPadding = computed(() => {
       :jacket="getCoverLink(getGameName(mobileList.next))"
       @click="emit('next')"
     />
+    <img v-show="false" alt="" :src="getGameName(songs[currentIndex + 2])" />
   </div>
 </template>
 
