@@ -35,7 +35,8 @@ watch(
   () => props.currentIndex,
   (newIndex) => {
     const preloadNextImage = new Image();
-    preloadNextImage.src = getSongName(props.songs[newIndex + 2]);
+    preloadNextImage.fetchPriority = "low";
+    preloadNextImage.src = getCoverLink(getGameName(props.songs[newIndex + 2]));
   },
   { immediate: true }
 );
@@ -61,7 +62,6 @@ watch(
       :jacket="getCoverLink(getGameName(mobileList.next))"
       @click="emit('next')"
     />
-    <img v-show="false" alt="" :src="getGameName(songs[currentIndex + 2])" />
   </div>
 </template>
 
