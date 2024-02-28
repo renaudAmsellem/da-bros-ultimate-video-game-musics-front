@@ -11,14 +11,16 @@ const liked = ref(false);
 watch(
   () => props.songName,
   (newSongValue) => {
+    console.log(currentLikes);
     liked.value = currentLikes[newSongValue] || false;
   },
   { immediate: true }
 );
 
 const like = () => {
-  liked.value = !liked.value;
-  currentLikes[props.songName] = !liked.value;
+  const newLikeValue = !liked.value;
+  liked.value = newLikeValue;
+  currentLikes[props.songName] = newLikeValue;
   localStorage.setItem(localStorageKey, JSON.stringify(currentLikes));
 };
 </script>
