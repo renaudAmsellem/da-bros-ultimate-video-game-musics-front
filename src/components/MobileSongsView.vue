@@ -48,6 +48,8 @@ watch(
       v-if="mobileList.previous"
       class="previous-song absolute top-0"
       :jacket="getCoverLink(getGameName(mobileList.previous))"
+      :song-name="getSongName(mobileList.previous)"
+      :game-name="getGameName(mobileList.previous)"
       @click="emit('previous')"
     />
     <SongView
@@ -60,6 +62,8 @@ watch(
       v-if="mobileList.next"
       class="next-song absolute top-0"
       :jacket="getCoverLink(getGameName(mobileList.next))"
+      :song-name="getSongName(mobileList.next)"
+      :game-name="getGameName(mobileList.next)"
       @click="emit('next')"
     />
   </div>

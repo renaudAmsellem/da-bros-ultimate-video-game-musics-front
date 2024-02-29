@@ -18,7 +18,12 @@ const jacket = computed(() => getCoverLink(props.gameName));
     @click="emit('selectSong')"
     @keypress="emit('selectSong')"
   >
-    <Jacket class="mb-2" :jacket="jacket" />
+    <Jacket
+      class="mb-2"
+      :jacket="jacket"
+      :song-name="songName"
+      :game-name="gameName"
+    />
     <p
       v-if="songName"
       :class="isActive && 'font-bold'"

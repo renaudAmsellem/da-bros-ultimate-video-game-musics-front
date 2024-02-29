@@ -1,12 +1,12 @@
 <script setup>
-defineProps(["jacket"]);
+defineProps(["jacket", "gameName", "songName"]);
 </script>
 
 <template>
   <img
     class="rounded-xl"
     :src="jacket"
-    alt="Jaquette"
+    :alt="`Jaquette de ${gameName} ${songName}`"
     width="264"
     height="352"
   />

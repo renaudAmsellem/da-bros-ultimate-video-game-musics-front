@@ -12,7 +12,7 @@ const jacket = computed(() => getCoverLink(props.gameName));
     <img
       class="rounded-xl mr-4"
       :src="jacket"
-      alt="Jaquette du jeu"
+      :alt="`Jaquette de ${gameName} ${songName}`"
       width="57"
       height="76"
     />
