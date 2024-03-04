@@ -45,7 +45,7 @@ const playPreviousSong = () => {
 };
 
 const playNextSong = () => {
-  if (indexSong.value === songs.length) {
+  if (indexSong.value >= currentPlaylist.value.length - 1) {
     indexSong.value = 0;
     return;
   }
@@ -121,6 +121,7 @@ const stopSearching = () => (currentSearch.value = false);
 watch(
   () => [indexSong.value, currentPlaylist.value],
   () => {
+    if (indexSong.value >= currentPlaylist.value.length) return;
     const gameAndSongName = currentPlaylist.value[indexSong.value];
     const gameName = getGameName(gameAndSongName);
     const songName = getSongName(gameAndSongName);

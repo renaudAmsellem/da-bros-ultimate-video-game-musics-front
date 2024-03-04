@@ -3,5 +3,8 @@ export const getGameName = (song) =>
 
 export const getSongName = (song) => song.substring(song.indexOf("- ") + 2);
 
+export const sanitizePath = (path) =>
+  path.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+
 export const getCoverLink = (gameName) =>
-  `/covers/${gameName.replace("&", "and")}.png`;
+  `/covers/${sanitizePath(gameName)}.png`;

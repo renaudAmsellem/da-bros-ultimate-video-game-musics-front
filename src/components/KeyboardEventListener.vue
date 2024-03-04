@@ -1,5 +1,6 @@
 <script setup>
 import { watch } from "vue";
+import { getCoverLink } from "../helpers/parseSong";
 
 const props = defineProps(["gameAndSongName", "gameName"]);
 const emit = defineEmits([
@@ -24,7 +25,7 @@ watch(
         title: props.gameAndSongName,
         artwork: [
           {
-            src: `/covers/${props.gameName.replace("&", "and")}.png`,
+            src: `/covers/${getCoverLink(props.gameName)}.png`,
             sizes: "264x352",
             type: "image/png",
           },
