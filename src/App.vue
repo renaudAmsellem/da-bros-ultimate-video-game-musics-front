@@ -113,10 +113,10 @@ const stopAndRemoveOldAudio = () => {
   audio.load();
 };
 
-const currentSearch = ref(false);
+const currentSearch = ref(songs);
 const currentPlaylist = ref(songs);
 const searching = (searchSongs) => (currentSearch.value = searchSongs);
-const stopSearching = () => (currentSearch.value = false);
+const stopSearching = () => (currentSearch.value = songs);
 
 watch(
   () => [indexSong.value, currentPlaylist.value],
