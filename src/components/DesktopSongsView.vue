@@ -65,42 +65,27 @@ const currentIndexSongByX = computed(() =>
 
 <template>
   <div class="mx-5" :style="{ paddingTop: yPadding + 'px' }">
-    <div class="flex mx-auto justify-around mb-4">
-      <div v-for="(song, index) in songsByX[currentIndexSongByX]" :key="song">
+    <div
+      v-for="line in jacketLinesCount"
+      :key="line"
+      class="flex mx-auto justify-around mb-4"
+    >
+      <div
+        v-for="(song, index) in songsByX[currentIndexSongByX + line - 1]"
+        :key="song"
+      >
         <SongView
           class="cursor-pointer max-w-48 w-48 p-3"
           :song-name="getSongName(song)"
           :game-name="getGameName(song)"
           :is-active="activeSong === song"
           @select-song="
-            emit('selectSong', index + currentIndexSongByX * jacketByLines)
+            emit(
+              'selectSong',
+              index + (currentIndexSongByX + line - 1) * jacketByLines
+            )
           "
         />
-      </div>
-    </div>
-    <div v-if="currentIndexSongByX + 1 < songsByX.length">
-      <div
-        v-for="line in jacketLinesCount - 1"
-        :key="line"
-        class="flex mx-auto justify-around mb-4"
-      >
-        <div
-          v-for="(song, index) in songsByX[currentIndexSongByX + line]"
-          :key="song"
-        >
-          <SongView
-            class="cursor-pointer max-w-48 w-48 p-3"
-            :song-name="getSongName(song)"
-            :game-name="getGameName(song)"
-            :is-active="activeSong === song"
-            @select-song="
-              emit(
-                'selectSong',
-                index + (currentIndexSongByX + line) * jacketByLines
-              )
-            "
-          />
-        </div>
       </div>
     </div>
   </div>
