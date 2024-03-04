@@ -9,7 +9,7 @@ import ProgressBar from "./components/ProgressBar.vue";
 import KeyboardEventListener from "./components/KeyboardEventListener.vue";
 import MobileSongsView from "./components/MobileSongsView.vue";
 import DesktopSongsView from "./components/DesktopSongsView.vue";
-import SearchSongs from "./components/SearchSongs.vue";
+import SearchBar from "./components/SearchBar.vue";
 import { getShuffledSongs } from "./helpers/getShuffledSongs";
 import { gamesMetadata } from "./gamesMetadata";
 import { isWebmSupported } from "./helpers/supportedFormats";
@@ -150,7 +150,7 @@ const isMobile = computed(() => width.value < 768);
 <template>
   <header>
     <h1 class="text-center text-xl font-bold py-5 row-start-2">oidaЯ Rabio</h1>
-    <SearchSongs
+    <SearchBar
       v-if="!isMobile"
       :songs="songs"
       @searching="searching"
