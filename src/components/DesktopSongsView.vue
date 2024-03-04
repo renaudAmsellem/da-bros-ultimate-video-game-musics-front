@@ -4,7 +4,12 @@ import SongView from "./SongView.vue";
 import { getGameName, getSongName } from "../helpers/parseSong";
 import { useWindowResize } from "../composables/useWindowResize";
 
-const props = defineProps(["songs", "currentIndex"]);
+const props = defineProps([
+  "songs",
+  "currentIndex",
+  "activeSong",
+  "isActiveSongInSearch",
+]);
 const emit = defineEmits(["selectSong"]);
 
 const { width, desktopHeight } = useWindowResize();
@@ -52,10 +57,10 @@ const songsByX = computed(() => {
 });
 
 const currentIndexSongByX = computed(() =>
-  Math.floor(props.currentIndex / jacketByLines.value)
+  props.isActiveSongInSearch
+    ? Math.floor(props.currentIndex / jacketByLines.value)
+    : 0
 );
-
-const isActive = computed(() => props.currentIndex % jacketByLines.value);
 </script>
 
 <template>
@@ -66,7 +71,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
           class="cursor-pointer max-w-48 w-48 p-3"
           :song-name="getSongName(song)"
           :game-name="getGameName(song)"
-          :is-active="isActive === index"
+          :is-active="activeSong === song"
           @select-song="
             emit('selectSong', index + currentIndexSongByX * jacketByLines)
           "
@@ -77,7 +82,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
       <div
         v-for="line in jacketLinesCount - 1"
         :key="line"
-        class="flex mx-auto justify-around mb-5"
+        class="flex mx-auto justify-around mb-4"
       >
         <div
           v-for="(song, index) in songsByX[currentIndexSongByX + line]"
@@ -87,6 +92,7 @@ const isActive = computed(() => props.currentIndex % jacketByLines.value);
             class="cursor-pointer max-w-48 w-48 p-3"
             :song-name="getSongName(song)"
             :game-name="getGameName(song)"
+            :is-active="activeSong === song"
             @select-song="
               emit(
                 'selectSong',

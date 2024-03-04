@@ -11,7 +11,6 @@ const liked = ref(false);
 watch(
   () => props.songName,
   (newSongValue) => {
-    console.log(currentLikes);
     liked.value = currentLikes[newSongValue] || false;
   },
   { immediate: true }

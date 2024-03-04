@@ -49,6 +49,7 @@ watch(
 );
 
 document.body.onkeydown = function (e) {
+  if (e.target.type === "text") return;
   if (e.key == " " || e.code == "Space" || e.keyCode == 32) {
     e.preventDefault();
     emit("togglePlayPause");

@@ -1,5 +1,5 @@
 <script setup lang="js">
-import { ref, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import MobileLayout from "./layouts/MobileLayout.vue";
 import Like from "./components/Like.vue";
 import Share from "./components/Share.vue";
@@ -9,6 +9,7 @@ import ProgressBar from "./components/ProgressBar.vue";
 import KeyboardEventListener from "./components/KeyboardEventListener.vue";
 import MobileSongsView from "./components/MobileSongsView.vue";
 import DesktopSongsView from "./components/DesktopSongsView.vue";
+import SearchSongs from "./components/SearchSongs.vue";
 import { getShuffledSongs } from "./helpers/getShuffledSongs";
 import { gamesMetadata } from "./gamesMetadata";
 import { isWebmSupported } from "./helpers/supportedFormats";
@@ -60,6 +61,11 @@ const restartCurrentSong = () => {
 
 const selectSong = (index) => {
   indexSong.value = index;
+  if (currentSearch.value) {
+    currentPlaylist.value = currentSearch.value;
+  } else {
+    currentPlaylist.value = songs;
+  }
 };
 
 const togglePlayPause = () => {
@@ -107,10 +113,15 @@ const stopAndRemoveOldAudio = () => {
   audio.load();
 };
 
+const currentSearch = ref(false);
+const currentPlaylist = ref(songs);
+const searching = (searchSongs) => (currentSearch.value = searchSongs);
+const stopSearching = () => (currentSearch.value = false);
+
 watch(
-  () => indexSong.value,
+  () => [indexSong.value, currentPlaylist.value],
   () => {
-    const gameAndSongName = songs[indexSong.value];
+    const gameAndSongName = currentPlaylist.value[indexSong.value];
     const gameName = getGameName(gameAndSongName);
     const songName = getSongName(gameAndSongName);
     const songMetadata = gamesMetadata[gameName];
@@ -133,12 +144,21 @@ watch(
 );
 
 const { width } = useWindowResize();
+const isMobile = computed(() => width.value < 768);
 </script>
 
 <template>
-  <h1 class="text-center text-xl font-bold py-5">oidaЯ Rabio</h1>
+  <header>
+    <h1 class="text-center text-xl font-bold py-5 row-start-2">oidaЯ Rabio</h1>
+    <SearchSongs
+      v-if="!isMobile"
+      :songs="songs"
+      @searching="searching"
+      @stop-searching="stopSearching"
+    />
+  </header>
 
-  <MobileLayout v-if="width < 768">
+  <MobileLayout v-if="isMobile">
     <MobileSongsView
       :songs="songs"
       :current-index="indexSong"
@@ -168,7 +188,9 @@ const { width } = useWindowResize();
 
   <main v-else>
     <DesktopSongsView
-      :songs="songs"
+      :songs="currentSearch ? currentSearch : songs"
+      :active-song="song.name"
+      :is-active-song-in-search="currentPlaylist === currentSearch"
       :current-index="indexSong"
       @select-song="selectSong"
     />
