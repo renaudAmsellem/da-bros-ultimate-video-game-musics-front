@@ -18,7 +18,7 @@ watch(search, () => {
 </script>
 <template>
   <div>
-    <div class="absolute top-5 right-2 flex">
+    <div class="absolute top-5 right-5 flex">
       <div
         class="flex absolute inset-y-0 items-center pl-3 pointer-events-none"
       >

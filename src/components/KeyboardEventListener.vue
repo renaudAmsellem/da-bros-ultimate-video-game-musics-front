@@ -25,7 +25,7 @@ watch(
         title: props.gameAndSongName,
         artwork: [
           {
-            src: `/covers/${getCoverLink(props.gameName)}.png`,
+            src: `${getCoverLink(props.gameName)}`,
             sizes: "264x352",
             type: "image/png",
           },
