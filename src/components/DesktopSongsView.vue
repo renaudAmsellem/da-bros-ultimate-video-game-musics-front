@@ -64,7 +64,7 @@ const currentIndexSongByX = computed(() =>
 </script>
 
 <template>
-  <div class="mx-5" :style="{ paddingTop: yPadding + 'px' }">
+  <div :style="{ paddingTop: yPadding + 'px' }">
     <div
       v-for="line in jacketLinesCount"
       :key="line"
